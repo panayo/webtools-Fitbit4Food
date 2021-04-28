@@ -300,6 +300,3 @@ def recommendation_engine_gui():
 # main function
 if __name__ == '__main__':
 	recommendation_engine_gui()
-
-#a
-#a
