@@ -76,29 +76,35 @@ def recommendation_engine_gui():
 	preference_option = ["All", "Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal"]
 
 	my_preference = st.sidebar.multiselect("Set your preferences (priority wise)", preference_option)
+	my_preference_preset = ' '
 
 	# Select All Preferences option
 	if "All" in my_preference:
 		my_preference = ["Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal"]
 
 	elif user_preset == "Healthy Helena":
-		my_preference = ["Additives Free", "Sugar Free", "Additives Free", "Dairy Free", "Gluten Free", "Vegan"]
+		my_preference_preset = ["Additives Free", "Sugar Free", "Additives Free", "Dairy Free", "Gluten Free", "Vegan"]
 	elif user_preset == "Sustainable Sally":
-		my_preference = ["Organic", "Free Range", "Vegan", "Non GMO", "Palm Oil Free", "Pesticide Free"]
+		my_preference_preset = ["Organic", "Free Range", "Vegan", "Non GMO", "Palm Oil Free", "Pesticide Free"]
 	elif user_preset == "Dietary Dave":
-		my_preference = ["Halal", "Vegan", "Gluten Free", "Dairy Free", "Sugar Free", "Additives Free"]
+		my_preference_preset = ["Halal", "Vegan", "Gluten Free", "Dairy Free", "Sugar Free", "Additives Free"]
 	elif user_preset == "Only Organic Tessa":
-		my_preference = ["Organic"]
+		my_preference_preset = ["Organic"]
 	else:
 		pass
 
 	# Merge preferences  
 	if len(my_preference) != 0 :
-		my_preference =  ' '.join(my_preference)
-		my_preference = my_preference.lower()
+		if len(user_preset) != 0:
+			my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
+		else:
+			my_preference = ' '.join(my_preference)
 	else:
-		my_preference = ''
-
+		if len(user_preset) != 0:
+			my_preference = ' '.join(my_preference_preset)
+		else:
+			my_preference = ' '
+	my_preference = my_preference.lower()
 	# Home option
 	if choice == "Home":
 
@@ -174,7 +180,7 @@ def recommendation_engine_gui():
 				last_page = len(recommendations) // N
 
 				# Add a next button and a previous button
-				prev, page ,next = st.beta_columns([1, 7, 1])
+				prev, _ , page_reset , _ , next = st.beta_columns([1,2,2,2,1])
 
 				if next.button("Next"):
 
@@ -190,6 +196,11 @@ def recommendation_engine_gui():
 					else:
 						session_state.page_number -= 1
 
+				if page_reset.button("Reset Page"):
+					session_state.page_number = 0
+				else:
+					pass
+
 				# Get start and end indices of the next page of the dataframe
 				start_idx = session_state.page_number * N 
 				end_idx = (1 + session_state.page_number) * N
@@ -200,7 +211,7 @@ def recommendation_engine_gui():
 					</div>
 						""".format(current_page=session_state.page_number)
 
-				# Display 'Results for...' tag into html
+				# Display current page
 				page = stc.html(CURRENT_PAGE, height = 60)
 
 				# Index into the sub dataframe
@@ -236,11 +247,10 @@ def recommendation_engine_gui():
 					'''.format(product_link = col1, img_link = col3, title = col2, price = col4)
 					
 					stc.html(PRODUCT_CARD,height=250)
-				
+
 			except Exception as e:
 				print(e)
 				pass
-
 
 	elif choice == "Scan receipt":
 		# init variable image_arr
@@ -300,3 +310,6 @@ def recommendation_engine_gui():
 # main function
 if __name__ == '__main__':
 	recommendation_engine_gui()
+
+#a
+#a
