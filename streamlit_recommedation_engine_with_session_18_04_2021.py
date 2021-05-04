@@ -65,6 +65,10 @@ def recommendation_engine_gui():
 	menu = ["Home","Scan receipt"]
 	choice = st.sidebar.selectbox("Options",menu)
 
+	# initialize preference_option and add to visual HTML(Front End)
+	preference_option = ["All", "Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal", "None"]
+	my_preference_preset = 'None'
+
 	# preset user profile
 	preset = ["None", "Healthy Helena", "Sustainable Sally", "Dietary Dave", "Price Conscious Peter", "Only Organic Tessa"]
 	user_preset = st.sidebar.selectbox("Preset User Profile",preset)
@@ -72,17 +76,8 @@ def recommendation_engine_gui():
 	# Title 'NLP based recommendation engine' into HTML
 	stc.html(HTML_TITLE)
 
-	# initialize preference_option and add to visual HTML(Front End)
-	preference_option = ["All", "Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal"]
-
-	my_preference = st.sidebar.multiselect("Set your preferences (priority wise)", preference_option)
-	my_preference_preset = ' '
-
 	# Select All Preferences option
-	if "All" in my_preference:
-		my_preference = ["Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal"]
-
-	elif user_preset == "Healthy Helena":
+	if user_preset == "Healthy Helena":
 		my_preference_preset = ["Additives Free", "Sugar Free", "Additives Free", "Dairy Free", "Gluten Free", "Vegan"]
 	elif user_preset == "Sustainable Sally":
 		my_preference_preset = ["Organic", "Free Range", "Vegan", "Non GMO", "Palm Oil Free", "Pesticide Free"]
@@ -92,6 +87,12 @@ def recommendation_engine_gui():
 		my_preference_preset = ["Organic"]
 	else:
 		pass
+
+	# Set user preference
+	my_preference = st.sidebar.multiselect("Set your preferences (priority wise)", preference_option, default=my_preference_preset)
+
+	if "All" in my_preference:
+		my_preference = ["Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal"]
 
 	# Merge preferences  
 	if len(my_preference) != 0 :
@@ -310,6 +311,3 @@ def recommendation_engine_gui():
 # main function
 if __name__ == '__main__':
 	recommendation_engine_gui()
-
-#a
-#a
