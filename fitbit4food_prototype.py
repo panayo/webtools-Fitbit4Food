@@ -127,12 +127,14 @@ def recommendation_engine_gui():
 			
 			if product_name.strip() == '':
 				if my_preference != '':
-					final_keyword = my_preference 
+					final_keyword = my_preference
+					final_keyword = scorecard_obj.correct_spell(final_keyword)
 				else: 
 					final_keyword = ''
 					
 			else:
 				final_keyword = product_name.lower()
+				final_keyword = scorecard_obj.correct_spell(final_keyword)
 
 			# Get recommendation using our object (Only single function call)
 			# TODO: ADD GUI for empty_flag if product list is empty
