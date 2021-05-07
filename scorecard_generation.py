@@ -12,11 +12,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.ndimage import interpolation as inter
 import numpy as np
-# from textblob import TextBlob
-
+from spellchecker import SpellChecker
 
 # change path if required / for mac os just comment this line
-pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+# pytesseract.pytesseract.tesseract_cmd = r'/usr/local/Cellar/tesseract/4.1.1/bin/tesseract'
 import streamlit as st
 import pandas as pd
 
@@ -25,13 +24,24 @@ class Scorecard_generator:
         # initialize of vectorization
         self.init_vectorization()
 
-    # This function is use to initilize vectorization method
+        # correct spelling up to 2 distance
+        self.spell = SpellChecker(distance=2)  # set at initialization
+
+    # This function is use to initialize vectorization method
     def init_vectorization(self):
         try:
             self.vectorizer = CountVectorizer(stop_words = "english", lowercase = True) 
 
         except Exception as e:
             print(e)
+
+    def correct_spell(self, mess):
+        arr = mess.split()
+        mess1 = []
+        for word in arr:
+            mess1.append(self.spell.correction(word))
+        mess1 = " ".join(mess1)
+        return mess1
 
     # general function to find distances using CountVectorizer
     def find_distances_and_cosine(self, receipt_data, user_preference):
@@ -45,7 +55,7 @@ class Scorecard_generator:
         # find distances on receipt_data using cosine similarity
         cosine_sim = cosine_similarity(count_matrix)
 
-        #  This is a cosine matrix our scrore present at element no (0,1) or (1,0)
+        #  This is a cosine matrix our score present at element no (0,1) or (1,0)
         # [[1.         0.27773186]
         #  [0.27773186 1.        ]]
         #print(cosine_sim)
@@ -60,7 +70,7 @@ class Scorecard_generator:
         # convert the image to binary image... for better OCR
         ret,thresh1 = cv2.threshold(image,165,255,cv2.THRESH_BINARY, cv2.THRESH_OTSU)
 
-        #Skew Correction
+        # Skew Correction
         _, rotated = self.correct_skew(thresh1)
         #print(angle)
         
@@ -110,6 +120,10 @@ class Scorecard_generator:
         # remove other words then text
         text = re.sub('[^a-zA-Z]', ' ', text)
 
+        # uncomment to use spell corrector
+        text = self.correct_spell(text)
+        # print(text)
+
         # remove common words of receipt
         text = self.replaceMultiple(text, ["countdown"," shop","smarter"], "")
 
@@ -147,15 +161,14 @@ class Scorecard_generator:
         print("Data Loaded")
         return data
 
-    def get_product_discription_from_csv(self, data, product_name):
+    def get_product_description_from_csv(self, data, product_name):
         try:
             
             # substring to be searched
-            #product_name ='Crunchy '
 
-            # creating and passsing series to new column
+            # creating and passing series to new column
             data_index = data["Product Title"].str.find(product_name)
-            #print(data_index)
+
             print("product_name", product_name)
             #blob_pname = TextBlob(product_name)
             #product_name = str(blob_pname.correct())
@@ -238,7 +251,7 @@ class Scorecard_generator:
                                 
                                 # search product in our csv file
                                 
-                                description_text += self.get_product_discription_from_csv(data, product[0])
+                                description_text += self.get_product_description_from_csv(data, product[0])
 
 
                     except Exception as e:
@@ -262,14 +275,14 @@ class Scorecard_generator:
     def get_score_from_receipt(self, image, USER_PREFERENCE_TEXT= 'Organic'):
         normalized_score = 0
         # image preprocessing
-        #image = self.receipt_pre_processing(image)
+        image = self.receipt_pre_processing(image)
 
         # Text extraction
         extracted_data = self.get_text_from_receipt(image)
         #print(extracted_data)
 
         #####################################################################
-        # 2nd method to increse score
+        # 2nd method to increase score
         normalized_score += self.generate_product_list_and_get_score(extracted_data, USER_PREFERENCE_TEXT)
         print("--------")
 
