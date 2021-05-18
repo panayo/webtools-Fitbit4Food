@@ -57,6 +57,18 @@ def save_image(file):
 		f.write(file.getbuffer())
 	return 0
 
+def multiselect(label, options, default, format_func=str):
+    """multiselect extension that enables default to be a subset list of the list of objects	
+     - not a list of strings	
+     Assumes that options have unique format_func representations	
+     cf. https://github.com/streamlit/streamlit/issues/352	
+     """
+    options_ = {format_func(option): option for option in options}
+    default_ = [format_func(option) for option in default]
+    selections = st.multiselect(
+        label, options=list(options_.keys()), default=default_, format_func=format_func
+    )
+    return [options_[format_func(selection)] for selection in selections]
 
 # GUI function for dashboard
 def recommendation_engine_gui():
@@ -70,7 +82,7 @@ def recommendation_engine_gui():
 	my_preference_preset = 'None'
 
 	# preset user profile
-	preset = ["None", "Healthy Helena", "Sustainable Sally", "Dietary Dave", "Price Conscious Peter", "Only Organic Tessa"]
+	preset = ["None", "Healthy Helena", "Sustainable Sally", "Dietary Dave", "Price Conscious Peter", "Only Organic Olivia"]
 	user_preset = st.sidebar.selectbox("Preset User Profile",preset)
 
 	# Title 'NLP based recommendation engine' into HTML
@@ -78,12 +90,12 @@ def recommendation_engine_gui():
 
 	# Select All Preferences option
 	if user_preset == "Healthy Helena":
-		my_preference_preset = ["Additives Free", "Sugar Free", "Additives Free", "Dairy Free", "Gluten Free", "Vegan"]
+		my_preference_preset = ["Additives Free", "Sugar Free", "Dairy Free", "Gluten Free", "Vegan"]
 	elif user_preset == "Sustainable Sally":
 		my_preference_preset = ["Organic", "Free Range", "Vegan", "Non GMO", "Palm Oil Free", "Pesticide Free"]
 	elif user_preset == "Dietary Dave":
-		my_preference_preset = ["Halal", "Vegan", "Gluten Free", "Dairy Free", "Sugar Free", "Additives Free"]
-	elif user_preset == "Only Organic Tessa":
+		my_preference_preset = ["Halal", "Vegan", "Gluten Free", "Dairy Free", "Sugar Free"]
+	elif user_preset == "Only Organic Olivia":
 		my_preference_preset = ["Organic"]
 	else:
 		pass
@@ -94,10 +106,12 @@ def recommendation_engine_gui():
 	if "All" in my_preference:
 		my_preference = ["Organic", "Non GMO", "Pesticide Free", "Free Range", "Nut Free", "Dairy Free", "Palm Oil Free", "Additives Free", "Sugar Free", "Gluten Free", "Vegan", "Halal"]
 
+	print("my_preference_preset: ", my_preference_preset)
+
 	# Merge preferences  
 	if len(my_preference) != 0 :
 		if len(user_preset) != 0:
-			my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
+			my_preference = ' '.join(my_preference_preset)
 		else:
 			my_preference = ' '.join(my_preference)
 	else:
@@ -139,7 +153,7 @@ def recommendation_engine_gui():
 			# Get recommendation using our object (Only single function call)
 			# TODO: ADD GUI for empty_flag if product list is empty
 			print("my_preference",my_preference)
-			recommendations, len_of_list, empty_flag = recommendation_engine.recommendations_from_keyword(final_keyword, THRESHOLD= 2, USER_PREFERENCE_TEXT= my_preference)
+			recommendations, len_of_list, empty_flag = recommendation_engine.recommendations_from_keyword(final_keyword, THRESHOLD= 2, USER_PREFERENCE= my_preference)
 
 			# Condition if user input is empty -> pass user preference  
 			if final_keyword.strip() == '':

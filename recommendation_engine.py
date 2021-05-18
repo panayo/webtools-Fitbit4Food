@@ -40,7 +40,7 @@ class Recommendation_Engine:
         except Exception as e:
             print(e)
 
-    # spell correction method to corret mispelled words of user
+    # spell correction method to correct misspelled words of user
     def spell_correction(self, keyword):
         corrected_keyword = TextBlob(keyword)
         return corrected_keyword.correct()
@@ -106,17 +106,17 @@ class Recommendation_Engine:
         except Exception as e:
             print(e)
 
-    # general function to find distances using TFIDF
-    def find_tfidf_and_cosine_old(self, input_data, search_data):
-        # Create list and append user input   
-        input_data.append(str(search_data))
-        # generate new sparse matrix of tfidf
-        tfidf = self.TfidfVec.fit_transform(input_data)
-        # find recommendations on user keyword using cosine similarity
-        distances = cosine_similarity(tfidf[-1], tfidf)
-        return distances[0][:-1]
+    # # general function to find distances using TFIDF
+    # def find_tfidf_and_cosine_old(self, input_data, search_data):
+    #     # Create list and append user input
+    #     input_data.append(str(search_data))
+    #     # generate new sparse matrix of tfidf
+    #     tfidf = self.TfidfVec.fit_transform(input_data)
+    #     # find recommendations on user keyword using cosine similarity
+    #     distances = cosine_similarity(tfidf[-1], tfidf)
+    #     return distances[0][:-1]
 
-    # NEW function to find distances using TFIDF using Gensim
+    # NEW function to find distances using TFIDF
     def find_tfidf_and_cosine(self, input_data, search_data):
         # Create list and append user input   
         input_data.append(str(search_data))
@@ -144,14 +144,16 @@ class Recommendation_Engine:
         else:
             USER_PREFERENCE_TEXT = USER_PREFERENCE_TEXT.lower()
 
+            recommendation_list['features_priority_1'] = recommendation_list['Product Title'].astype(str) + ' ' + recommendation_list['Category'].astype(str)
+
             # CASE 1 / Priority 1 user input + PREFERENCE
-            title_data = recommendation_list['Product Title'].values.tolist()
+            title_data = recommendation_list['features_priority_1'].values.tolist()
             
             # find distance with title
             recommendation_list['distances_1'] = self.find_tfidf_and_cosine(title_data, USER_PREFERENCE_TEXT)
 
             # # filter distance using THRESHOLD
-            # THRESHOLD > 2.1 for get prodcuts form only title. (distances_1>=2.1 sava as it is) 
+            # THRESHOLD > 2.1 for get products form only title. (distances_1>=2.1 sava as it is)
             # CASE 1 Output
             recommendation_list_priority1 = recommendation_list[recommendation_list['distances_1'] >= 1.3/100].sort_values(by=['distances_1'], ascending=False)
 
@@ -160,7 +162,7 @@ class Recommendation_Engine:
             recommendation_list_priority2 = recommendation_list[recommendation_list['distances_1'] < 1.3/100].sort_values(by=['distances_1'], ascending=False)
 
             #Select other features for case 2
-            recommendation_list_priority2['features_priority_2'] = recommendation_list_priority2['Product Title'].astype(str) + ' ' + recommendation_list_priority2['Ingredients'].astype(str) + ' ' + recommendation_list_priority2['Nutritional_information'].astype(str) + ' ' + recommendation_list_priority2['Allergen warnings'].astype(str) + ' ' + recommendation_list_priority2['Claims'].astype(str) + ' ' + recommendation_list_priority2['Endorsements'].astype(str)
+            recommendation_list_priority2['features_priority_2'] = recommendation_list_priority2['Product Title'].astype(str) + ' ' + recommendation_list_priority2['Category'].astype(str) + ' ' +recommendation_list_priority2['Ingredients'].astype(str) + ' ' + recommendation_list_priority2['Nutritional_information'].astype(str) + ' ' + recommendation_list_priority2['Allergen warnings'].astype(str) + ' ' + recommendation_list_priority2['Claims'].astype(str) + ' ' + recommendation_list_priority2['Endorsements'].astype(str)
             
             other_data = recommendation_list_priority2['features_priority_2'].values.tolist()
 
@@ -177,25 +179,65 @@ class Recommendation_Engine:
             recommendation_list_priority1 = recommendation_list_priority1.append(recommendation_list_priority2, ignore_index = True)
             #print(recommendation_list_priority1)
 
-            # Delete proceesed column 
-            del recommendation_list_priority1['distances_1']	
+            # Delete processed column
+            del recommendation_list_priority1['features_priority_1']
+            del recommendation_list_priority1['distances_1']
             del recommendation_list_priority1['features_priority_2']	
             del recommendation_list_priority1['distances_2']	
             	
 
         return recommendation_list_priority1
-        
+
+    # map category with USER_PREFERENCE
+    def map_user_preference(self, USER_PREFERENCE=[]):
+        # case: USER_PREFERENCE is none then use main categories only
+        if len(USER_PREFERENCE) == 0:
+            return ''
+        else:
+            my_preference = ''
+            for preference in USER_PREFERENCE:
+                # print(preference)
+                if preference.lower() == "organic":
+                    my_preference += 'organic Fruit & Veg Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Drinks Beer & Wine Ice Cream & Sorbet Health & Beauty '
+                elif preference.lower() == "non gmo":
+                    my_preference += 'non gmo Fruit & Veg Frozen Baby & Child Fridge & Deli Bakery Pantry '
+                elif preference.lower() == "pesticide free":
+                    my_preference += 'pesticide free Fruit & Veg Meat & Seafood Baby & Child Fridge & Deli Pantry '
+                elif preference.lower() == "free range":
+                    my_preference += 'Free Range Eggs Meat & Seafood Frozen Meat Fridge & Deli Pantry Pet '
+                elif preference.lower() == "nut free":
+                    my_preference += 'nut free Frozen Fridge & Deli Bakery Pantry '
+                elif preference.lower() == "dairy free":
+                    my_preference += 'dairy free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet '
+                elif preference.lower() == "palm oil free":
+                    my_preference += 'palm oil free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet '
+                elif preference.lower() == "additives free":
+                    my_preference += 'additives free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet Health & Beauty '
+                elif preference.lower() == "sugar free":
+                    my_preference += 'sugar free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet '
+                elif preference.lower() == "gluten free":
+                    my_preference += 'gluten free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet '
+                elif preference.lower() == "vegan":
+                    my_preference += 'vegan Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet '
+                elif preference.lower() == "halal":
+                    my_preference += 'halal Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet Health & Beauty '
+            my_preference = my_preference.lower()
+        return my_preference
 
     # this function will help to get recommendations
-    def recommendations_from_keyword(self, KEYWORD, THRESHOLD = 2, USER_PREFERENCE_TEXT=''):
+    def recommendations_from_keyword(self, KEYWORD, THRESHOLD = 2, USER_PREFERENCE=[]):
         try: 
-            # null input condition get recommandation based on preferece
+            # null input condition get recommendation based on preference
             if KEYWORD == '': 
                 self.recommendation_list = None
                 self.legnth_recommendation_list = 0
                 self.empty_flag = True
                 return self.recommendation_list, self.legnth_recommendation_list, self.empty_flag
-            
+
+            # map category with USER_PREFERENCE
+            USER_PREFERENCE_TEXT = self.map_user_preference(USER_PREFERENCE)
+            # print(USER_PREFERENCE_TEXT)
+
             KEYWORD = KEYWORD.lower()
             #print(KEYWORD)
             
