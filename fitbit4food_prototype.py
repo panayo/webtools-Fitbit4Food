@@ -57,19 +57,6 @@ def save_image(file):
 		f.write(file.getbuffer())
 	return 0
 
-def multiselect(label, options, default, format_func=str):
-    """multiselect extension that enables default to be a subset list of the list of objects	
-     - not a list of strings	
-     Assumes that options have unique format_func representations	
-     cf. https://github.com/streamlit/streamlit/issues/352	
-     """
-    options_ = {format_func(option): option for option in options}
-    default_ = [format_func(option) for option in default]
-    selections = st.multiselect(
-        label, options=list(options_.keys()), default=default_, format_func=format_func
-    )
-    return [options_[format_func(selection)] for selection in selections]
-
 # GUI function for dashboard
 def recommendation_engine_gui():
 	
@@ -111,7 +98,7 @@ def recommendation_engine_gui():
 	# Merge preferences  
 	if len(my_preference) != 0 :
 		if len(user_preset) != 0:
-			my_preference = ' '.join(my_preference_preset)
+			my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
 		else:
 			my_preference = ' '.join(my_preference)
 	else:
@@ -152,7 +139,7 @@ def recommendation_engine_gui():
 
 			# Get recommendation using our object (Only single function call)
 			# TODO: ADD GUI for empty_flag if product list is empty
-			print("my_preference",my_preference)
+			print("my_preference: ",my_preference)
 			recommendations, len_of_list, empty_flag = recommendation_engine.recommendations_from_keyword(final_keyword, THRESHOLD= 2, USER_PREFERENCE= my_preference)
 
 			# Condition if user input is empty -> pass user preference  
