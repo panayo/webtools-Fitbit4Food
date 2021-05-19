@@ -13,6 +13,7 @@ from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from textblob import TextBlob
 import time
+import inflect
 
 class Recommendation_Engine:
     def __init__(self):
@@ -30,6 +31,9 @@ class Recommendation_Engine:
         self.tokanization()
 
         self.init_vectorization()
+
+        # Initialize inflect engine
+        self.inflect_engine = inflect.engine()
 
     # get all data into dataframe  
     def _read_csv(self, FILE_NAME):
@@ -224,6 +228,86 @@ class Recommendation_Engine:
             my_preference = my_preference.lower()
         return my_preference
 
+     # Check collocation of the prefernce to improve the accuracy in case of 'Non GMO', 'Sugar Free' etc
+    def collocation(self, KEYWORD, USER_PREFERENCE=[]):
+        print(KEYWORD.lower().split(" "))
+        other_words = ['no', 'non', 'free', 'zero']
+        # loop for all word in user input
+        for word in KEYWORD.lower().split(" "):
+            # loop to check other_words present or not
+            if word in other_words:
+                # Auto change user preference based on user text input
+                # Check word is present in input KEYWORD
+                if (KEYWORD.lower().find('organic') != -1):
+                    # if found change preference
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("organic", "").strip()
+                        # Remove from preference
+                        USER_PREFERENCE.remove('Organic')
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('gmo') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("gmo", "").strip()
+                        # Append into  preference
+                        USER_PREFERENCE.append('Non GMO')
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('pesticide') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("pesticide", "").strip()
+                        # Append into  preference
+                        USER_PREFERENCE.append('Pesticide Free')
+
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('range') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("range", "").strip()
+                        # Append into  preference
+                        USER_PREFERENCE.append('Free Range')
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('nut') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("nut", "").strip()
+                        # Append into  preference
+                        USER_PREFERENCE.append('Nut Free')
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('dairy') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("dairy", "").strip()
+                        # Append into  preference
+                        USER_PREFERENCE.append('Dairy Free')
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('oil') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("oil", "").strip()
+                        # Append into  preference
+                        USER_PREFERENCE.append('Palm oil Free')
+                    except Exception as e:
+                        print(e)
+                        pass
+                KEYWORD = KEYWORD.replace(word, "").strip()
+            else:
+                pass
+        return KEYWORD, USER_PREFERENCE
+
     # this function will help to get recommendations
     def recommendations_from_keyword(self, KEYWORD, THRESHOLD = 2, USER_PREFERENCE=[]):
         try: 
@@ -233,6 +317,14 @@ class Recommendation_Engine:
                 self.legnth_recommendation_list = 0
                 self.empty_flag = True
                 return self.recommendation_list, self.legnth_recommendation_list, self.empty_flag
+
+            # Function collocation manipulate user preference
+            KEYWORD, USER_PREFERENCE = self.collocation(KEYWORD, USER_PREFERENCE)
+            print("collocation: ", KEYWORD, USER_PREFERENCE)
+            # Generate plural form of key word and append into KEYWORD itself
+            plural = self.inflect_engine.plural(KEYWORD)
+            KEYWORD += " " + plural
+            print("Add plural:", KEYWORD)
 
             # map category with USER_PREFERENCE
             USER_PREFERENCE_TEXT = self.map_user_preference(USER_PREFERENCE)

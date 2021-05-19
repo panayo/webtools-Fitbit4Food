@@ -95,18 +95,19 @@ def recommendation_engine_gui():
 
 	print("my_preference_preset: ", my_preference_preset)
 
-	# Merge preferences  
-	if len(my_preference) != 0 :
-		if len(user_preset) != 0:
-			my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
-		else:
-			my_preference = ' '.join(my_preference)
-	else:
-		if len(user_preset) != 0:
-			my_preference = ' '.join(my_preference_preset)
-		else:
-			my_preference = ' '
-	my_preference = my_preference.lower()
+	# # Merge preferences
+	# if len(my_preference) != 0 :
+	# 	if len(user_preset) != 0:
+	# 		my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
+	# 	else:
+	# 		my_preference = ' '.join(my_preference)
+	# else:
+	# 	if len(user_preset) != 0:
+	# 		my_preference = ' '.join(my_preference_preset)
+	# 	else:
+	# 		my_preference = ' '
+	# my_preference = my_preference.lower()
+
 	# Home option
 	if choice == "Home":
 
@@ -225,9 +226,9 @@ def recommendation_engine_gui():
 				#st.write(sub_recommendations)
 
 				# Select required column
-				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'])
+				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'], sub_recommendations['Product Detail'])
 
-				for _, (col1,col2,col3,col4) in enumerate(myrows):
+				for _, (col1,col2,col3,col4,col5) in enumerate(myrows):
 					# create HTML product card
 					PRODUCT_CARD = '''
 					<div style="background-color:#464e5e;padding: var(--su-4);border-radius:10px;position: relative;">
@@ -245,11 +246,18 @@ def recommendation_engine_gui():
 						<h2 style = "color:white;">{title}</h2>
 						<h3 style = "color:white;">$ {price}</h3>
 						<a target="_blank" href="{product_link}" style = "background-color:rgb(48, 200, 0);color:white;padding:10px; border-radius:10px"> Buy Now </a>
+						<a target={product_detail} style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </a>
 					</span>
 					
 					</div>
-					'''.format(product_link = col1, img_link = col3, title = col2, price = col4)
-					
+					'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
+
+					#Unlock the product information
+					# if st.button("Unlock more information"):
+					# 	cv2.destroyAllWindows()
+					# 	cv2.imshow('Final', {img_link})
+					# 	st.image(img_link)
+
 					stc.html(PRODUCT_CARD,height=250)
 
 			except Exception as e:
