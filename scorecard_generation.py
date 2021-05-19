@@ -245,7 +245,10 @@ class Scorecard_generator:
                         if re.findall(r"\d+",product):
                             # remove most common lines [Filter 2]
                             if product.find("PH:") == -1 and product.find("GST") == -1 and product.find("@") == -1 and product.find("MERCH") == -1 and product.find("www") == -1: 
-                                
+
+                                # Uncomment to use spell corrector for product search to raw data
+                                product = self.correct_spell(product)
+
                                 # find exact product name from product list with prices and quantity [Filter 3]
                                 product = re.split(r'(\s\d)', product)
                                 
@@ -272,7 +275,15 @@ class Scorecard_generator:
 
 
     # one function call to access everything
-    def get_score_from_receipt(self, image, USER_PREFERENCE_TEXT= 'Organic'):
+    def get_score_from_receipt(self, image, USER_PREFERENCE_TEXT= ['Organic']):
+
+        # Merge preferences
+        if len(USER_PREFERENCE_TEXT) != 0:
+            USER_PREFERENCE_TEXT = ' '.join(USER_PREFERENCE_TEXT)
+        else:
+            USER_PREFERENCE_TEXT = ' '
+        USER_PREFERENCE_TEXT = USER_PREFERENCE_TEXT.lower()
+
         normalized_score = 0
         # image preprocessing
         image = self.receipt_pre_processing(image)

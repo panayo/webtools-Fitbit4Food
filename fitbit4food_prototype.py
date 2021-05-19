@@ -246,7 +246,7 @@ def recommendation_engine_gui():
 						<h2 style = "color:white;">{title}</h2>
 						<h3 style = "color:white;">$ {price}</h3>
 						<a target="_blank" href="{product_link}" style = "background-color:rgb(48, 200, 0);color:white;padding:10px; border-radius:10px"> Buy Now </a>
-						<a target={product_detail} style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </a>
+						<a target="_blank" href="{product_detail}" style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </a>
 					</span>
 					
 					</div>

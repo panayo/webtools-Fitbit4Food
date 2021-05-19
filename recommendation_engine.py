@@ -252,7 +252,7 @@ class Recommendation_Engine:
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("gmo", "").strip()
-                        # Append into  preference
+                        # Append into preference
                         USER_PREFERENCE.append('Non GMO')
                     except Exception as e:
                         print(e)
@@ -261,7 +261,7 @@ class Recommendation_Engine:
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("pesticide", "").strip()
-                        # Append into  preference
+                        # Append into preference
                         USER_PREFERENCE.append('Pesticide Free')
 
                     except Exception as e:
@@ -271,8 +271,8 @@ class Recommendation_Engine:
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("range", "").strip()
-                        # Append into  preference
-                        USER_PREFERENCE.append('Free Range')
+                        # Append into preference
+                        USER_PREFERENCE.append(['Free Range', 'Cage free'])
                     except Exception as e:
                         print(e)
                         pass
@@ -280,7 +280,7 @@ class Recommendation_Engine:
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("nut", "").strip()
-                        # Append into  preference
+                        # Append into preference
                         USER_PREFERENCE.append('Nut Free')
                     except Exception as e:
                         print(e)
@@ -289,7 +289,7 @@ class Recommendation_Engine:
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("dairy", "").strip()
-                        # Append into  preference
+                        # Append into preference
                         USER_PREFERENCE.append('Dairy Free')
                     except Exception as e:
                         print(e)
@@ -298,8 +298,17 @@ class Recommendation_Engine:
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("oil", "").strip()
-                        # Append into  preference
+                        # Append into preference
                         USER_PREFERENCE.append('Palm oil Free')
+                    except Exception as e:
+                        print(e)
+                        pass
+                elif (KEYWORD.lower().find('addtives') != -1):
+                    try:
+                        # Remove word
+                        KEYWORD = KEYWORD.replace("additives", "").strip()
+                        # Append into preference
+                        USER_PREFERENCE.append(['Flavour', 'Stabiliser', 'Emulsifier', 'Antioxidant', 'Preservative'])
                     except Exception as e:
                         print(e)
                         pass
