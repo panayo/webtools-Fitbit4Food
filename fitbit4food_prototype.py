@@ -21,9 +21,6 @@ HTML_TITLE = """
 	</div>
 	"""
 
-# create object of our backend script
-recommendation_engine = Recommendation_Engine()
-
 # create object of score card generator backend
 scorecard_obj = Scorecard_generator()
 
@@ -95,18 +92,9 @@ def recommendation_engine_gui():
 
 	print("my_preference_preset: ", my_preference_preset)
 
-	# # Merge preferences
-	# if len(my_preference) != 0 :
-	# 	if len(user_preset) != 0:
-	# 		my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
-	# 	else:
-	# 		my_preference = ' '.join(my_preference)
-	# else:
-	# 	if len(user_preset) != 0:
-	# 		my_preference = ' '.join(my_preference_preset)
-	# 	else:
-	# 		my_preference = ' '
-	# my_preference = my_preference.lower()
+	# create object of our backend script
+	recommendation_engine = Recommendation_Engine(my_preference)
+
 
 	# Home option
 	if choice == "Home":
