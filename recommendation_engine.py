@@ -16,7 +16,7 @@ import time
 import inflect
 
 class Recommendation_Engine:
-    def __init__(self):
+    def __init__(self, my_preference):
 
         # read data from csv
         self._read_csv("all_product_data.csv")
@@ -30,7 +30,7 @@ class Recommendation_Engine:
         # initialize of tokanization and vectorization
         self.tokanization()
 
-        self.init_vectorization()
+        self.init_vectorization(my_preference)
 
         # Initialize inflect engine
         self.inflect_engine = inflect.engine()
@@ -100,14 +100,26 @@ class Recommendation_Engine:
         self.remove_punctuation_dict = dict((ord(punct), None) for punct in string.punctuation)
         return self.LemmeTokens(nltk.word_tokenize(text.lower().translate(self.remove_punctuation_dict)))
 
-    # this function is use to initilize vectorization method
-    def init_vectorization(self):
+    # this function is use to initialize vectorization method
+    def init_vectorization(self, my_preference):
         try:
             #self.TfidfVec = TfidfVectorizer(ngram_range=(1, 2),stop_words = "english", lowercase = True, max_features = 500000) 
             
-            self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
-        
+            # Any preference contain 2 or more word than we initialized n-gram else without n-gram
+            if len(my_preference) !=0:
+                if any(len(x.split()) > 1 for x in my_preference):
+                    print ("Found a match, init with n-gram")
+                    self.HashVec = HashingVectorizer(ngram_range=(1, 2), stop_words = "english", lowercase = True)
+                else:
+                    print ("Not a match, init without n-gram")
+                    self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
+            else:
+                self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
+
         except Exception as e:
+            # in case of any Exception
+            self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
+
             print(e)
 
     # # general function to find distances using TFIDF
@@ -208,7 +220,7 @@ class Recommendation_Engine:
                 elif preference.lower() == "pesticide free":
                     my_preference += 'pesticide free Fruit & Veg Meat & Seafood Baby & Child Fridge & Deli Pantry '
                 elif preference.lower() == "free range":
-                    my_preference += 'Free Range Eggs Meat & Seafood Frozen Meat Fridge & Deli Pantry Pet '
+                    my_preference += 'Free Range Eggs Meat & Seafood Frozen Meat Fridge & Deli Pantry Pet Cage free'
                 elif preference.lower() == "nut free":
                     my_preference += 'nut free Frozen Fridge & Deli Bakery Pantry '
                 elif preference.lower() == "dairy free":
@@ -216,7 +228,7 @@ class Recommendation_Engine:
                 elif preference.lower() == "palm oil free":
                     my_preference += 'palm oil free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet '
                 elif preference.lower() == "additives free":
-                    my_preference += 'additives free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet Health & Beauty '
+                    my_preference += 'additives free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet Ice Cream & Sorbet Health & Beauty Flavour Stabiliser Emulsifier Antioxidant Preservative'
                 elif preference.lower() == "sugar free":
                     my_preference += 'sugar free Frozen Meat & Seafood Baby & Child Fridge & Deli Bakery Pantry Pet '
                 elif preference.lower() == "gluten free":
@@ -228,7 +240,7 @@ class Recommendation_Engine:
             my_preference = my_preference.lower()
         return my_preference
 
-     # Check collocation of the prefernce to improve the accuracy in case of 'Non GMO', 'Sugar Free' etc
+     # Check collocation of the preference to improve the accuracy in case of 'Non GMO', 'Sugar Free' etc
     def collocation(self, KEYWORD, USER_PREFERENCE=[]):
         print(KEYWORD.lower().split(" "))
         other_words = ['no', 'non', 'free', 'zero']
@@ -303,7 +315,7 @@ class Recommendation_Engine:
                     except Exception as e:
                         print(e)
                         pass
-                elif (KEYWORD.lower().find('addtives') != -1):
+                elif (KEYWORD.lower().find('additives') != -1):
                     try:
                         # Remove word
                         KEYWORD = KEYWORD.replace("additives", "").strip()
