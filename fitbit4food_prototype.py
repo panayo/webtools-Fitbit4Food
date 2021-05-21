@@ -21,9 +21,6 @@ HTML_TITLE = """
 	</div>
 	"""
 
-# create object of our backend script
-recommendation_engine = Recommendation_Engine()
-
 # create object of score card generator backend
 scorecard_obj = Scorecard_generator()
 
@@ -95,18 +92,8 @@ def recommendation_engine_gui():
 
 	print("my_preference_preset: ", my_preference_preset)
 
-	# # Merge preferences
-	# if len(my_preference) != 0 :
-	# 	if len(user_preset) != 0:
-	# 		my_preference = ' '.join(my_preference) + ' ' + ' '.join(my_preference_preset)
-	# 	else:
-	# 		my_preference = ' '.join(my_preference)
-	# else:
-	# 	if len(user_preset) != 0:
-	# 		my_preference = ' '.join(my_preference_preset)
-	# 	else:
-	# 		my_preference = ' '
-	# my_preference = my_preference.lower()
+	# create object of our backend script
+	recommendation_engine = Recommendation_Engine(my_preference)
 
 	# Home option
 	if choice == "Home":
@@ -231,23 +218,19 @@ def recommendation_engine_gui():
 				for _, (col1,col2,col3,col4,col5) in enumerate(myrows):
 					# create HTML product card
 					PRODUCT_CARD = '''
-					<div style="background-color:#464e5e;padding: var(--su-4);border-radius:10px;position: relative;">
+					<div style="padding: var(--su-4);border-radius:10px; position: relative; display:block;width:100%; height:192px; text-align:center">
 					
-					<span class="column" style="background-color: rgb(49, 51, 63);float: left;
-					width: 40%;height: 192px;
-					padding: 10px;position: relative; justify-content: center;">
-						<img style="color:white;text-align:right;" alt = "image"  src ='{img_link}' width="200" height="200">
-						
-					</span>
-					
-					
-					<span class="column" style="background-color: rgb(49, 80, 63);float: left;
-					width: 54%; padding: 10px;position: relative; height: 192px;justify-content: center; ">
+					<div class="column" style="background-color: rgb(49, 51, 63); display:inline-block; float:left; width:40%; height:100%; padding: 10px; position: relative; justify-content: center">
+						<img style="color:white; max-width:70%;" alt = "image"  src ='{img_link}'>
+					</div>
+										
+					<div class="column" style="background-color: rgb(49, 80, 63); float: left; width: 54%; height:100%; padding: 10px; position: relative; justify-content: left; text-align: left">
 						<h2 style = "color:white;">{title}</h2>
-						<h3 style = "color:white;">$ {price}</h3>
-						<a target="_blank" href="{product_link}" style = "background-color:rgb(48, 200, 0);color:white;padding:10px; border-radius:10px"> Buy Now </a>
+						<h3 style = "color:white;">$ {price} </h3> 
+						<br>
+						<a target="_blank" href="{product_link}" style = "background-color:rgb(48, 200, 0); color:white; padding:10px; border-radius:10px"> Buy Now </a>
 						<a target="_blank" href="{product_detail}" style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </a>
-					</span>
+					</div>
 					
 					</div>
 					'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
