@@ -240,6 +240,9 @@ def recommendation_engine_gui():
 						category_html += "<br></div>"
 						#print(category_html)
 						
+					if str(col7) =='nan':
+						col4 = ""
+
 
 					PRODUCT_CARD ='''
 						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
