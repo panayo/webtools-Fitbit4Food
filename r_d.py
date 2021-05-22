@@ -102,13 +102,10 @@ for i in range(4):
     </div>'''  
 
     PRODUCT_CARD ='''
-    <link rel="stylesheet" type="text/css" href="https://raw.githubusercontent.com/HimanshuMoliya/webtools-Fitbit4Food/main/static/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
     <style>
 
-    .body{{
-        background-color: ##007bff;
-    }}
     .ratings i {{
         font-size: 16px;
         color: red
@@ -147,10 +144,11 @@ for i in range(4):
         font-size: 16px
     }}
     </style>
+    <body style = "background-color: transparent;">
     <div class="container mt-2 mb-2">
         <div class="d-flex justify-content-center row">
             <div class="col-md-2">
-                <div class="row p-2 bg-white border rounded">
+                <div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
                     <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="https://i.imgur.com/QpjAiHq.jpg"></div>
                     <div class="col-md-6 mt-1">
                         <h5>Quant olap shirts</h5>
@@ -166,15 +164,18 @@ for i in range(4):
                             <h4 class="mr-1">$13.99</h4><span class="strike-text">$20.99</span>
                         </div>
                         <h6 class="text-success">Free shipping</h6>
-                        <div class="d-flex flex-column mt-4"><button class="btn btn-primary btn-sm" type="button">Details</button><button class="btn btn-outline-primary btn-sm mt-2" type="button">Add to wishlist</button></div>
+                        <div class="d-flex flex-column mt-4">
+                        <button onClick="javascript:window.open('http://www.facebook.com', '_blank');" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button"> <a style = "color: rgb(255, 255, 255);"> Details </a></button>
+
+                        <button onClick="javascript:window.open('http://www.facebook.com', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a style = "color: #2e6f22;"> Add to cart</a></button></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>    
+    </body>
     '''
-    #stc.html(PRODUCT_CARD,height=660)
-    st.markdown(PRODUCT_CARD, unsafe_allow_html=True)
+    stc.html(PRODUCT_CARD,height=660)
 
 
 
@@ -228,3 +229,68 @@ for i in range(4):
     # 			</div>
     # 			</div>
     # 		'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
+
+
+# PRODUCT_CARD = '''
+# 					<div style="padding: var(--su-4);border-radius:10px; position: relative; display:block;width:100%; height:192px; text-align:center">
+					
+# 					<div class="column" style="background-color: rgb(49, 51, 63); display:inline-block; float:left; width:40%; height:100%; padding: 10px; position: relative; justify-content: center">
+# 						<img style="color:white; max-width:70%;" alt = "image"  src ='{img_link}'>
+# 					</div>
+										
+# 					<div class="column" style="background-color: rgb(49, 80, 63); float: left; width: 54%; height:100%; padding: 10px; position: relative; justify-content: left; text-align: left">
+# 						<h2 style = "color:white;">{title}</h2>
+# 						<h3 style = "color:white;">$ {price} </h3> 
+# 						<br>
+# 						<a target="_blank" href="{product_link}" style = "background-color:rgb(48, 200, 0); color:white; padding:10px; border-radius:10px"> Buy Now </a>
+# 						<a target="_blank" href="{product_detail}" style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </a>
+# 					</div>
+					
+# 					</div>
+# 					'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
+
+# 					PRODUCT_CARD = '''
+# 								<style>
+# 								.flex__wrapper {{
+# 								display: flex;
+# 								position: relative;
+# 								flex-wrap: wrap;
+# 								}}
+# 								[class*=col--] {{
+# 								box-sizing: border-box;
+# 								flex-basis: 0;
+# 									flex-grow: 1;
+# 									max-width: 100%;
+# 								}}
+
+# 								.col--m-s-12 {{
+# 								width: 100%;
+# 								}}
+
+# 								.col--t-s-6 {{
+# 								width: 50%;
+# 								}}
+
+# 								img {{
+# 								height: 100%;
+# 								width: 100%;
+# 								object-fit:cover;
+# 								}}
+# 								</style>
+
+# 								<div class="flex__wrapper">
+# 								<div class="col--m-s-12 col--t-s-6" style="text-align:center">
+# 								<img style="color:white; max-width:70%;" alt = "image"  src ="{img_link}">
+# 								</div>
+# 								<div class="col--m-s-12 col--t-s-6">
+# 									<h2 style = "color:white;">{title}</h2>
+# 									<h3 style = "color:white;">$ {price} </h3> 
+# 									<br>
+# 									<div>
+# 									<a target="_blank" href="{product_link}"><button target="_blank" style = "background-color:rgb(48, 200, 0); color:white; padding:10px; border-radius:10px"> Buy Now </button></a>
+# 									<a target="_blank" href="{product_detail}"> 
+# 									<button style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </button></a>
+# 									</div>
+# 								</div>
+# 								</div>
+# 							'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
