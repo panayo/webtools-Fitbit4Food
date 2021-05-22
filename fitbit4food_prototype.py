@@ -241,7 +241,7 @@ def recommendation_engine_gui():
 						#print(category_html)
 						
 					if str(col7) =='nan':
-						col4 = ""
+						col7 = ""
 
 
 					PRODUCT_CARD ='''
