@@ -115,11 +115,7 @@ def recommendation_engine_gui():
 		if submit or product_name:
 			
 			if product_name.strip() == '':
-				if my_preference != '':
-					final_keyword = my_preference
-					final_keyword = scorecard_obj.correct_spell(final_keyword)
-				else: 
-					final_keyword = ''
+				final_keyword =  'food'
 					
 			else:
 				final_keyword = product_name.lower()
@@ -235,11 +231,51 @@ def recommendation_engine_gui():
 					</div>
 					'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
 
-					#Unlock the product information
-					# if st.button("Unlock more information"):
-					# 	cv2.destroyAllWindows()
-					# 	cv2.imshow('Final', {img_link})
-					# 	st.image(img_link)
+					PRODUCT_CARD = '''
+								<style>
+								.flex__wrapper {{
+								display: flex;
+								position: relative;
+								flex-wrap: wrap;
+								}}
+								[class*=col--] {{
+								box-sizing: border-box;
+								flex-basis: 0;
+									flex-grow: 1;
+									max-width: 100%;
+								}}
+
+								.col--m-s-12 {{
+								width: 100%;
+								}}
+
+								.col--t-s-6 {{
+								width: 50%;
+								}}
+
+								img {{
+								height: 100%;
+								width: 100%;
+								object-fit:cover;
+								}}
+								</style>
+
+								<div class="flex__wrapper">
+								<div class="col--m-s-12 col--t-s-6" style="text-align:center">
+								<img style="color:white; max-width:70%;" alt = "image"  src ="{img_link}">
+								</div>
+								<div class="col--m-s-12 col--t-s-6">
+									<h2 style = "color:white;">{title}</h2>
+									<h3 style = "color:white;">$ {price} </h3> 
+									<br>
+									<div>
+									<a target="_blank" href="{product_link}"><button target="_blank" style = "background-color:rgb(48, 200, 0); color:white; padding:10px; border-radius:10px"> Buy Now </button></a>
+									<a target="_blank" href="{product_detail}"> 
+									<button style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </button></a>
+									</div>
+								</div>
+								</div>
+							'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
 
 					stc.html(PRODUCT_CARD,height=250)
 
