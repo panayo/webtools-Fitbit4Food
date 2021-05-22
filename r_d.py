@@ -102,7 +102,7 @@ for i in range(4):
     </div>'''  
 
     PRODUCT_CARD ='''
-    <link rel="stylesheet" href="static/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://raw.githubusercontent.com/HimanshuMoliya/webtools-Fitbit4Food/main/static/bootstrap.min.css">
 
     <style>
 
