@@ -115,7 +115,7 @@ def recommendation_engine_gui():
 		if submit or product_name:
 			
 			if product_name.strip() == '':
-				final_keyword =  'food'
+				final_keyword = 'food'
 					
 			else:
 				final_keyword = product_name.lower()
@@ -243,21 +243,19 @@ def recommendation_engine_gui():
 					if str(col7) =='nan':
 						col7 = ""
 
-
 					PRODUCT_CARD ='''
 						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-
+						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 						<style>
-
 							.ratings i {{
 								font-size: 16px;
 								color: red
 							}}
-
 							.btn-outline-primary:hover {{
 								color: #ffffff;
 								background-color: rgb(131, 160, 52);
-
 							}}
 							.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {{
 								color: rgb(255, 255, 255);
@@ -268,7 +266,6 @@ def recommendation_engine_gui():
 								color: red;
 								text-decoration: line-through
 							}}
-
 							.product-image {{
 								width: 50%
 							}}
@@ -298,6 +295,33 @@ def recommendation_engine_gui():
 							}}
 						</style>
 						<body style = "background-color: transparent;">
+
+							<!-- The Modal -->
+							<div class="modal" id="myModal">
+								<div class="modal-dialog">
+								<div class="modal-content">
+								
+									<!-- Modal Header -->
+									<div class="modal-header">
+									<h4 class="modal-title">{title}</h4>
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									</div>
+									
+									<!-- Modal body -->
+									<div class="modal-body">
+									{product_detail}
+									</div>
+									
+									<!-- Modal footer -->
+									<div class="modal-footer">
+									<button type="button" class="btn btn-danger" style = "background-color: #2e6f22; border-color: #2e6f22" data-dismiss="modal">Close</button>
+									</div>
+
+								</div>
+								</div>
+							</div>
+
+
 							<div class="container mt-2 mb-2">
 								<div class="d-flex justify-content-center row">
 									<div class="col-md-2">
@@ -316,7 +340,7 @@ def recommendation_engine_gui():
 												</div>
 												<h6 class="{availability_color}">{availability}</h6>
 												<div class="d-flex flex-column mt-4">
-												<button onClick="javascript:window.open('{product_detail}', '_blank');" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
+												<button data-toggle="modal" data-target="#myModal" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 												<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button></div>
 											</div>
 										</div>
