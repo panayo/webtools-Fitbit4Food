@@ -27,6 +27,10 @@ scorecard_obj = Scorecard_generator()
 session_state = SessionState.get(page_number = 0)
 
 @st.cache
+
+def read_markdown_file(markdown_file):
+	return Path(markdown_file).read_text()
+
 def save_image(file):
 	#if file is too large then return
 	if file.size > 209715200: # 200 MB
@@ -115,11 +119,12 @@ def recommendation_engine_gui():
 		if submit or product_name:
 			
 			if product_name.strip() == '':
-				if my_preference != '':
-					final_keyword = my_preference
-					final_keyword = scorecard_obj.correct_spell(final_keyword)
-				else: 
-					final_keyword = ''
+				# if my_preference != '':
+				# 	final_keyword = my_preference
+				# 	final_keyword = scorecard_obj.correct_spell(final_keyword)
+				# else:
+				# 	final_keyword = ''
+				final_keyword = 'food'
 					
 			else:
 				final_keyword = product_name.lower()
@@ -208,40 +213,160 @@ def recommendation_engine_gui():
 
 				# Index into the sub dataframe
 				sub_recommendations = recommendations.iloc[start_idx:end_idx]
-				
+
 				# uncomment this line to see sub list
 				#st.write(sub_recommendations)
 
 				# Select required column
-				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'], sub_recommendations['Product Detail'])
+				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'], sub_recommendations['Product Volume'], sub_recommendations['Category'], sub_recommendations['Product Detail'])
 
-				for _, (col1,col2,col3,col4,col5) in enumerate(myrows):
+				for _, (col1,col2,col3,col4,col5,col6,col7) in enumerate(myrows):
 					# create HTML product card
+
+					if str(col4) == 'nan':
+						availability = "Not available"
+						availability_color = 'text-danger'
+						col4 = "N/A"
+					# print("HERE")
+					else:
+						availability = "Available"
+						availability_color = 'text-success'
+
+					# print(len(col6))
+
+					# convert category string to list
+					if len(col6) > 4:
+						import ast
+						col6_array = ast.literal_eval(col6)
+						print(col6_array)
+						print(type(col6_array))
+						category_html = '''<div class="mt-1 mb-1 spec-1">'''
+						for i in col6_array:
+							# print(i)
+							category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
+
+						category_html += "<br></div>"
+					# print(category_html)
+
+					if str(col7) == 'nan':
+						col7 = ""
+
 					PRODUCT_CARD = '''
-					<div style="padding: var(--su-4);border-radius:10px; position: relative; display:block;width:100%; height:192px; text-align:center">
-					
-					<div class="column" style="background-color: rgb(49, 51, 63); display:inline-block; float:left; width:40%; height:100%; padding: 10px; position: relative; justify-content: center">
-						<img style="color:white; max-width:70%;" alt = "image"  src ='{img_link}'>
-					</div>
-										
-					<div class="column" style="background-color: rgb(49, 80, 63); float: left; width: 54%; height:100%; padding: 10px; position: relative; justify-content: left; text-align: left">
-						<h2 style = "color:white;">{title}</h2>
-						<h3 style = "color:white;">$ {price} </h3> 
-						<br>
-						<a target="_blank" href="{product_link}" style = "background-color:rgb(48, 200, 0); color:white; padding:10px; border-radius:10px"> Buy Now </a>
-						<a target="_blank" href="{product_detail}" style = "background-color:rgb(48, 65, 0); color:white; float:right; padding:10px; border-radius:10px"> Unlock More Info </a>
-					</div>
-					
-					</div>
-					'''.format(product_link = col1, title = col2, img_link = col3,  price = col4, product_detail = col5)
+						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+						<style>
+							.ratings i {{
+								font-size: 16px;
+								color: red
+							}}
+							.btn-outline-primary:hover {{
+								color: #ffffff;
+								background-color: rgb(131, 160, 52);
+							}}
+							.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {{
+								color: rgb(255, 255, 255);
+								background-color: #2e6f22;
+								border-color: rgb(0, 123, 255);
+							}}
+							.strike-text {{
+								color: red;
+								text-decoration: line-through
+							}}
+							.product-image {{
+								width: 50%
+							}}
+							.dot {{
+								height: 7px;
+								width: 7px;
+								margin-left: 6px;
+								margin-right: 6px;
+								margin-top: 3px;
+								background-color: green;
+								border-radius: 50%;
+								display: inline-block
+							}}
+							.spec-1 {{
+								color: #938787;
+								font-size: 15px
+							}}
+							h5 {{
+								font-weight: 400
+							}}
+							.para {{
+								font-size: 16px
+							}}
+							.popup {{
+								position: relative;
+								display: inline - block;
+								cursor: pointer;
+							}}
+							.popup .popuptext {{
+								visibility: hidden;
+								width: 4000px;
+								background-color: #175724;
+								color: #fff;
+								text-align: center;
+								border-radius: 6px;
+								padding: 100px 0;
+								position: absolute;
+								z-index: 1;
+								bottom: 125%;
+								left: 50%;
+								margin-left: -8px;
+							}}
+							.popup .popuptext::after {{
+								content: "";
+								position: absolute;
+								top: 100 %;
+								left: 50 %;
+								margin-left: -5px;
+								border-width: 5px;
+								border-style: solid;
+								border-color:  '#555 transparent transparent transparent';
+							}}
+							.popup .show {{
+								visibility: visible;
+							}}
+						</style>
+						<script>
+							function myFunction() {{
+  								var popup = document.getElementById("myPopup");
+  								popup.classList.toggle("show");
+							}}
+						</script>
+						<body style = "background-color: transparent;">
+							<div class="container mt-2 mb-2">
+								<div class="d-flex justify-content-center row">
+									<div class="col-md-2">
+										<div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
+											<div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
+											<div class="col-md-6 mt-1">
+												<h5>{title}</h5>
 
-					#Unlock the product information
-					# if st.button("Unlock more information"):
-					# 	cv2.destroyAllWindows()
-					# 	cv2.imshow('Final', {img_link})
-					# 	st.image(img_link)
+												{category_html}
+												<p class="text-justify text-truncate para mb-0">{product_detail}<br><br></p>
+											</div>
+											<div class="align-items-center align-content-center col-md-3 border-left mt-1">
+												<div class="d-flex flex-row align-items-center">
+													<h4 class="mr-1">$ {price}</h4>
+													<span style = "color: #d44d2f; border-color: #2e6f22;">{volume}</span>
+												</div>
+												<h6 class="{availability_color}">{availability}</h6>
+												<div class="d-flex flex-column mt-4">
+													<div class="popup" onclick="myFunction()"> Unlock More Info
+														<span class="popuptext" id="myPopup"> {product_detail} </span>
+													</div>
+												<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>    
+						</body>
+						'''.format(product_link=col1, title=col2, img_link=col3, price=col4, volume=col5,
+								   availability=availability, availability_color=availability_color,
+								   category_html=category_html, product_detail=col7)
 
-					stc.html(PRODUCT_CARD,height=250)
+					stc.html(PRODUCT_CARD, height=600)
 
 			except Exception as e:
 				print(e)
@@ -301,6 +426,8 @@ def recommendation_engine_gui():
 
 			st.balloons()
 			stc.html(SCORE_TITLE)
+
+# <button onClick="javascript:window.open('{product_detail}', '_blank');" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 
 # main function
 if __name__ == '__main__':
