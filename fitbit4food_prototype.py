@@ -27,10 +27,6 @@ scorecard_obj = Scorecard_generator()
 session_state = SessionState.get(page_number = 0)
 
 @st.cache
-
-def read_markdown_file(markdown_file):
-	return Path(markdown_file).read_text()
-
 def save_image(file):
 	#if file is too large then return
 	if file.size > 209715200: # 200 MB
@@ -119,13 +115,7 @@ def recommendation_engine_gui():
 		if submit or product_name:
 			
 			if product_name.strip() == '':
-				# if my_preference != '':
-				# 	final_keyword = my_preference
-				# 	final_keyword = scorecard_obj.correct_spell(final_keyword)
-				# else:
-				# 	final_keyword = ''
 				final_keyword = 'food'
-					
 			else:
 				final_keyword = product_name.lower()
 				final_keyword = scorecard_obj.correct_spell(final_keyword)
@@ -227,12 +217,10 @@ def recommendation_engine_gui():
 						availability = "Not available"
 						availability_color = 'text-danger'
 						col4 = "N/A"
-					# print("HERE")
+
 					else:
 						availability = "Available"
 						availability_color = 'text-success'
-
-					# print(len(col6))
 
 					# convert category string to list
 					if len(col6) > 4:
@@ -242,17 +230,18 @@ def recommendation_engine_gui():
 						print(type(col6_array))
 						category_html = '''<div class="mt-1 mb-1 spec-1">'''
 						for i in col6_array:
-							# print(i)
 							category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
 
 						category_html += "<br></div>"
-					# print(category_html)
 
 					if str(col7) == 'nan':
 						col7 = ""
 
 					PRODUCT_CARD = '''
 						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 						<style>
 							.ratings i {{
 								font-size: 16px;
@@ -294,46 +283,33 @@ def recommendation_engine_gui():
 							.para {{
 								font-size: 16px
 							}}
-							.popup {{
-								position: relative;
-								display: inline - block;
-								cursor: pointer;
-							}}
-							.popup .popuptext {{
-								visibility: hidden;
-								width: 4000px;
-								background-color: #175724;
-								color: #fff;
-								text-align: center;
-								border-radius: 6px;
-								padding: 100px 0;
-								position: absolute;
-								z-index: 1;
-								bottom: 125%;
-								left: 50%;
-								margin-left: -8px;
-							}}
-							.popup .popuptext::after {{
-								content: "";
-								position: absolute;
-								top: 100 %;
-								left: 50 %;
-								margin-left: -5px;
-								border-width: 5px;
-								border-style: solid;
-								border-color:  '#555 transparent transparent transparent';
-							}}
-							.popup .show {{
-								visibility: visible;
-							}}
 						</style>
-						<script>
-							function myFunction() {{
-  								var popup = document.getElementById("myPopup");
-  								popup.classList.toggle("show");
-							}}
-						</script>
+
 						<body style = "background-color: transparent;">
+							<!-- The Modal -->
+							<div class="modal" id="myModal">
+								<div class="modal-dialog">
+								<div class="modal-content">
+								
+									<!-- Modal Header -->
+									<div class="modal-header">
+									<h4 class="modal-title">{title}</h4>
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									</div>
+									
+									<!-- Modal body -->
+									<div class="modal-body">
+									{product_detail}
+									</div>
+									
+									<!-- Modal footer -->
+									<div class="modal-footer">
+									<button type="button" class="btn btn-danger" style = "background-color: #2e6f22; border-color: #2e6f22" data-dismiss="modal">Close</button>
+									</div>
+								</div>
+								</div>
+							</div>
+						
 							<div class="container mt-2 mb-2">
 								<div class="d-flex justify-content-center row">
 									<div class="col-md-2">
@@ -352,10 +328,9 @@ def recommendation_engine_gui():
 												</div>
 												<h6 class="{availability_color}">{availability}</h6>
 												<div class="d-flex flex-column mt-4">
-													<div class="popup" onclick="myFunction()"> Unlock More Info
-														<span class="popuptext" id="myPopup"> {product_detail} </span>
-													</div>
-												<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button></div>
+													<button data-toggle="modal" data-target="#myModal" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
+													<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -426,8 +401,6 @@ def recommendation_engine_gui():
 
 			st.balloons()
 			stc.html(SCORE_TITLE)
-
-# <button onClick="javascript:window.open('{product_detail}', '_blank');" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 
 # main function
 if __name__ == '__main__':
