@@ -229,8 +229,8 @@ def recommendation_engine_gui():
 					if len(col6) > 4 :
 						import ast
 						col6_array = ast.literal_eval(col6)
-						print(col6_array)
-						print(type(col6_array))
+						#print(col6_array)
+						#print(type(col6_array))
 						category_html = '''<div class="mt-1 mb-1 spec-1">'''
 						for i in col6_array:
 							#print(i)
@@ -324,7 +324,7 @@ def recommendation_engine_gui():
 
 							<div class="container mt-2 mb-2">
 								<div class="d-flex justify-content-center row">
-									<div class="col-md-2">
+									<div class="col-md-11">
 										<div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
 											<div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
 											<div class="col-md-6 mt-1">
