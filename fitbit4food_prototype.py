@@ -115,7 +115,7 @@ def recommendation_engine_gui():
 		if submit or product_name:
 			
 			if product_name.strip() == '':
-				final_keyword = 'food'
+				final_keyword = 'food'	# if keyword is blank, default value is set to food
 			else:
 				final_keyword = product_name.lower()
 				final_keyword = scorecard_obj.correct_spell(final_keyword)
@@ -226,8 +226,8 @@ def recommendation_engine_gui():
 					if len(col6) > 4:
 						import ast
 						col6_array = ast.literal_eval(col6)
-						print(col6_array)
-						print(type(col6_array))
+						# print(col6_array)
+						# print(type(col6_array))
 						category_html = '''<div class="mt-1 mb-1 spec-1">'''
 						for i in col6_array:
 							category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
@@ -312,7 +312,7 @@ def recommendation_engine_gui():
 						
 							<div class="container mt-2 mb-2">
 								<div class="d-flex justify-content-center row">
-									<div class="col-md-2">
+									<div class="col-md-11">
 										<div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
 											<div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
 											<div class="col-md-6 mt-1">
@@ -337,9 +337,7 @@ def recommendation_engine_gui():
 								</div>
 							</div>    
 						</body>
-						'''.format(product_link=col1, title=col2, img_link=col3, price=col4, volume=col5,
-								   availability=availability, availability_color=availability_color,
-								   category_html=category_html, product_detail=col7)
+						'''.format(product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7)
 
 					stc.html(PRODUCT_CARD, height=600)
 
