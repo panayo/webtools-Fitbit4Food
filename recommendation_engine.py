@@ -100,25 +100,25 @@ class Recommendation_Engine:
         self.remove_punctuation_dict = dict((ord(punct), None) for punct in string.punctuation)
         return self.LemmeTokens(nltk.word_tokenize(text.lower().translate(self.remove_punctuation_dict)))
 
-    # this function is use to initialize vectorization method
+    # this function is use to initilize vectorization method
     def init_vectorization(self, my_preference):
         try:
             #self.TfidfVec = TfidfVectorizer(ngram_range=(1, 2),stop_words = "english", lowercase = True, max_features = 500000) 
-            
+
             # Any preference contain 2 or more word than we initialized n-gram else without n-gram
-            if len(my_preference) !=0:
+            if len(my_preference) != 0:
                 if any(len(x.split()) > 1 for x in my_preference):
-                    print ("Found a match, init with n-gram")
-                    self.HashVec = HashingVectorizer(ngram_range=(1, 2), stop_words = "english", lowercase = True)
+                    print("Found a match, init with n-gram")
+                    self.HashVec = HashingVectorizer(ngram_range=(1, 2), stop_words="english", lowercase=True)
                 else:
-                    print ("Not a match, init without n-gram")
-                    self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
+                    print("Not a match, init without n-gram")
+                    self.HashVec = HashingVectorizer(stop_words="english", lowercase=True)
             else:
-                self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
+                self.HashVec = HashingVectorizer(stop_words="english", lowercase=True)
 
         except Exception as e:
             # in case of any Exception
-            self.HashVec = HashingVectorizer(stop_words = "english", lowercase = True)
+            self.HashVec = HashingVectorizer(stop_words="english", lowercase=True)
 
             print(e)
 
@@ -151,7 +151,7 @@ class Recommendation_Engine:
 
     # Data order manipulation (implementation of priority 1 & 2 rest of product are listed after p2 (i.e, priority 3))
     def get_relevance_sorted_product_with_user_priority(self, recommendation_list, USER_PREFERENCE_TEXT):
-
+        
         # detect none user PREFERENCE
         if USER_PREFERENCE_TEXT == '':
             return recommendation_list
@@ -162,9 +162,9 @@ class Recommendation_Engine:
 
             recommendation_list['features_priority_1'] = recommendation_list['Product Title'].astype(str) + ' ' + recommendation_list['Category'].astype(str)
 
-            # Priority 1 user input title + words from USER_PREFERENCE
+            # Priority 1 : user input title + words from USER_PREFERENCE
             title_data = recommendation_list['features_priority_1'].values.tolist()
-
+            
             # find distance with title
             recommendation_list['distances_1'] = self.find_tfidf_and_cosine(title_data, USER_PREFERENCE_TEXT)
 
@@ -242,7 +242,7 @@ class Recommendation_Engine:
 
      # Check collocation of the preference to improve the accuracy in case of 'Non GMO', 'Sugar Free' etc
     def collocation(self, KEYWORD, USER_PREFERENCE=[]):
-        #print(KEYWORD.lower().split(" "))
+        # print(KEYWORD.lower().split(" "))
         other_words = ['no', 'non', 'free', 'zero']
         # loop for all word in user input
         for word in KEYWORD.lower().split(" "):
@@ -349,15 +349,15 @@ class Recommendation_Engine:
 
             # map category with USER_PREFERENCE
             USER_PREFERENCE_TEXT = self.map_user_preference(USER_PREFERENCE)
-            print(USER_PREFERENCE_TEXT)
+            # print(USER_PREFERENCE_TEXT)
 
             KEYWORD = KEYWORD.lower()
             #print(KEYWORD)
             
             # Create list and append user input   
             self.data_list = self.df['Product Title'].values.tolist()
-
-            # Priority 4 (GET all product associated with keyword using title)
+            
+            # Priority 4 : (GET all product associated with keyword using title)
             self.df['distances'] = self.find_tfidf_and_cosine(self.data_list, KEYWORD)
 
             # filter distance using THRESHOLD
