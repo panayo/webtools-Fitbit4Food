@@ -54,7 +54,7 @@
     
     <!-- The Modal -->
     <div class="modal" id="myModal">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
         
             <!-- Modal Header -->
@@ -62,20 +62,109 @@
             <h4 class="modal-title">Modal Heading</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            
+
             <!-- Modal body -->
             <div class="modal-body">
-            Modal body..
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_detail" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Product Detail</button>
+                </p>
+                
+                <div class="collapse" id="product_detail">
+                    <div class="card card-body">
+                        {product_detail}
+                    </div>
+                    <br>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Ingredients" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Ingredients</button>
+                </p>
+
+                <div class="collapse" id="Ingredients">
+                    <div class="card card-body">
+                        {Ingredients}
+                    </div>
+                    <br>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#nutritional_information" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Nutritional Information</button>
+                </p>
+
+                <div class="collapse" id="nutritional_information">
+                    <div class="card card-body">
+                        {Nutritional_information}
+                    </div>
+                    <br>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#allergen_warnings" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Allergen Warning</button>
+                </p>
+
+                <div class="collapse" id="allergen_warnings">
+                    <div class="card card-body">
+                        {Allergen_warnings}
+                    </div>
+                    <br>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#claims" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Claims</button>
+                </p>
+
+                <div class="collapse" id="claims">
+                    <div class="card card-body">
+                        {Claims}
+                    </div>
+                    <br>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#endorsements" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Endorsements</button>
+                </p>
+
+                <div class="collapse" id="endorsements">
+                    <div class="card card-body">
+                        {Endorsements}
+                    </div>
+                    <br>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_origin" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Product Origin</button>
+                </p>
+
+                <div class="collapse" id="product_origin">
+                    <div class="card card-body">
+                        {product_origin}
+                    </div>
+                    <br>
+                </div>
             </div>
             
             <!-- Modal footer -->
             <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" style = "background-color: #2e6f22; border-color: #2e6f22" data-dismiss="modal">Close</button>
             </div>
             
         </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
