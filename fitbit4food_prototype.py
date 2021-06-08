@@ -257,6 +257,9 @@ def recommendation_engine_gui():
 							.para {
 								font-size: 16px
 							}
+							.modal {
+								position: relative;
+							}
 						</style>
 
 						<body style = "background-color: transparent;">'''
