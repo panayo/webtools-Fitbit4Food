@@ -4,7 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<style>
+    <style>
     .ratings i {
         font-size: 16px;
         color: red
@@ -160,43 +160,55 @@
 
 
 
+    
 
 
 
 
+    <div id="loop">
 
+    </div>
+    <script>
+        var x ="", i;
+        for (i=1; i<=6; i++) {
 
-    <div class="container mt-5 mb-5">
-        <div class="d-flex justify-content-center row">
-            <div class="col-md-10">
-                <div class="container mt-2 mb-2">
-                    <div class="d-flex justify-content-center row">
-                        <div class="col-md-10">
-                            <div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
-                                <div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
-                                <div class="col-md-6 mt-1">
-                                    <h5>{title}</h5>
-                                    
-                                    {category_html}
-                                    <p class="text-justify text-truncate para mb-0">{product_detail}<br><br></p>
-                                </div>
-                                <div class="align-items-center align-content-center col-md-3 border-left mt-1">
-                                    <div class="d-flex flex-row align-items-center">
-                                        <h4 class="mr-1">$ {price}</h4>
-                                        <span style = "color: #d44d2f; border-color: #2e6f22;">{volume}</span>
+          x += `<div class="container mt-1 mb-1">
+                <div class="d-flex justify-content-center row">
+                    <div class="col-md-10">
+                        <div class="container mt-2 mb-2">
+                            <div class="d-flex justify-content-center row">
+                                <div class="col-md-10">
+                                    <div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
+                                        <div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
+                                        <div class="col-md-6 mt-1">
+                                            <h5>{title}</h5>
+                                            
+                                            {category_html}
+                                            <p class="text-justify text-truncate para mb-0">{product_detail}<br><br></p>
+                                        </div>
+                                        <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <h4 class="mr-1">$ {price}</h4>
+                                                <span style = "color: #d44d2f; border-color: #2e6f22;">{volume}</span>
+                                            </div>
+                                            <h6 class="{availability_color}">{availability}</h6>
+                                            <div class="d-flex flex-column mt-4">
+                                            <button data-toggle="modal" data-target="#myModal" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
+                                            <button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button></div>
+                                        </div>
                                     </div>
-                                    <h6 class="{availability_color}">{availability}</h6>
-                                    <div class="d-flex flex-column mt-4">
-                                    <button data-toggle="modal" data-target="#myModal" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
-                                    <button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button></div>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                     </div>
-                </div>    
-            </div>
-        </div>
-    </div>
+                </div>
+            </div>`
+          
+          
+          //x + "<h" + i + ">Heading " + i + "</h" + i + ">";
+        }
+        document.getElementById("loop").innerHTML = x;
+        </script>
 </body>
 </html>
 

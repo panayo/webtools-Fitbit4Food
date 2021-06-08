@@ -209,8 +209,60 @@ def recommendation_engine_gui():
 
 				# Select required column
 				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'], sub_recommendations['Product Volume'], sub_recommendations['Category'], sub_recommendations['Product Detail'], sub_recommendations['Ingredients'], sub_recommendations['Nutritional_information'], sub_recommendations['Allergen warnings'], sub_recommendations['Claims'], sub_recommendations['Endorsements'], sub_recommendations['Product origin'])
+				
+				# html header
+				PRODUCT_CARD = '''
+						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+						<style>
+							.ratings i {
+								font-size: 16px;
+								color: red
+							}
+							.btn-outline-primary:hover {
+								color: #ffffff;
+								background-color: rgb(131, 160, 52);
+							}
+							.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {
+								color: rgb(255, 255, 255);
+								background-color: #2e6f22;
+								border-color: rgb(0, 123, 255);
+							}
+							.strike-text {
+								color: red;
+								text-decoration: line-through
+							}
+							.product-image {
+								width: 50%
+							}
+							.dot {
+								height: 7px;
+								width: 7px;
+								margin-left: 6px;
+								margin-right: 6px;
+								margin-top: 3px;
+								background-color: green;
+								border-radius: 50%;
+								display: inline-block
+							}
+							.spec-1 {
+								color: #938787;
+								font-size: 15px
+							}
+							h5 {
+								font-weight: 400
+							}
+							.para {
+								font-size: 16px
+							}
+						</style>
 
-				for _, (col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13) in enumerate(myrows):
+						<body style = "background-color: transparent;">'''
+				
+				# loop on all product and generate HTML for each one and add into PRODUCT_CARD as string
+				for idx, (col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13) in enumerate(myrows):
 					# create HTML product card
 
 					if str(col4) == 'nan':
@@ -254,58 +306,9 @@ def recommendation_engine_gui():
 
 
 
-					PRODUCT_CARD = '''
-						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-						<style>
-							.ratings i {{
-								font-size: 16px;
-								color: red
-							}}
-							.btn-outline-primary:hover {{
-								color: #ffffff;
-								background-color: rgb(131, 160, 52);
-							}}
-							.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {{
-								color: rgb(255, 255, 255);
-								background-color: #2e6f22;
-								border-color: rgb(0, 123, 255);
-							}}
-							.strike-text {{
-								color: red;
-								text-decoration: line-through
-							}}
-							.product-image {{
-								width: 50%
-							}}
-							.dot {{
-								height: 7px;
-								width: 7px;
-								margin-left: 6px;
-								margin-right: 6px;
-								margin-top: 3px;
-								background-color: green;
-								border-radius: 50%;
-								display: inline-block
-							}}
-							.spec-1 {{
-								color: #938787;
-								font-size: 15px
-							}}
-							h5 {{
-								font-weight: 400
-							}}
-							.para {{
-								font-size: 16px
-							}}
-						</style>
-
-						<body style = "background-color: transparent;">
-							
+					PRODUCT_CARD += '''
 							<!-- The Modal -->
-							<div class="modal" id="myModal">
+							<div class="modal" id="card_{idx}">
 								<div class="modal-dialog modal-dialog-scrollable">
 								<div class="modal-content">
 								
@@ -425,7 +428,7 @@ def recommendation_engine_gui():
 												</div>
 												<h6 class="{availability_color}">{availability}</h6>
 												<div class="d-flex flex-column mt-4">
-													<button data-toggle="modal" data-target="#myModal" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
+													<button data-toggle="modal" data-target="#card_{idx}" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 													<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button>
 												</div>
 											</div>
@@ -433,13 +436,12 @@ def recommendation_engine_gui():
 									</div>
 								</div>
 							</div>    
-						</body>
-						'''.format(product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7, Ingredients=col8, Nutritional_information=col9, Allergen_warnings=col10, Claims=col11, Endorsements=col12, product_origin=col13)
-
-					AUTO_HEIGHT = '''
-						<div style="border: 1px solid gold; padding: 10px; height: auto; min-width: 100%; overflow: auto;"></div>
-						'''
-					stc.html(PRODUCT_CARD, height=600)
+						'''.format(idx= idx, product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7, Ingredients=col8, Nutritional_information=col9, Allergen_warnings=col10, Claims=col11, Endorsements=col12, product_origin=col13)
+				
+				# complate html tag
+				PRODUCT_CARD += "</body>"
+				
+				stc.html(PRODUCT_CARD, height=7000)
 
 			except Exception as e:
 				print(e)
