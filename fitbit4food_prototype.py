@@ -441,7 +441,7 @@ def recommendation_engine_gui():
 				# complate html tag
 				PRODUCT_CARD += "</body>"
 				
-				stc.html(PRODUCT_CARD, height=7500)
+				stc.html(PRODUCT_CARD, height=8000)
 
 			except Exception as e:
 				print(e)
