@@ -208,16 +208,69 @@ def recommendation_engine_gui():
 				#st.write(sub_recommendations)
 
 				# Select required column
-				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'], sub_recommendations['Product Volume'], sub_recommendations['Category'], sub_recommendations['Product Detail'])
+				myrows = zip(sub_recommendations['URL'], sub_recommendations['Product Title'], sub_recommendations['Product Image'], sub_recommendations['Product Price'], sub_recommendations['Product Volume'], sub_recommendations['Category'], sub_recommendations['Product Detail'], sub_recommendations['Ingredients'], sub_recommendations['Nutritional_information'], sub_recommendations['Allergen warnings'], sub_recommendations['Claims'], sub_recommendations['Endorsements'], sub_recommendations['Product origin'])
 
-				for _, (col1,col2,col3,col4,col5,col6,col7) in enumerate(myrows):
+				# html header
+				PRODUCT_CARD = '''
+						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+						<style>
+							.ratings i {
+								font-size: 16px;
+								color: red
+							}
+							.btn-outline-primary:hover {
+								color: #ffffff;
+								background-color: rgb(131, 160, 52);
+							}
+							.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {
+								color: rgb(255, 255, 255);
+								background-color: #2e6f22;
+								border-color: rgb(0, 123, 255);
+							}
+							.strike-text {
+								color: red;
+								text-decoration: line-through
+							}
+							.product-image {
+								width: 50%
+							}
+							.dot {
+								height: 7px;
+								width: 7px;
+								margin-left: 6px;
+								margin-right: 6px;
+								margin-top: 3px;
+								background-color: green;
+								border-radius: 50%;
+								display: inline-block
+							}
+							.spec-1 {
+								color: #938787;
+								font-size: 15px
+							}
+							h5 {
+								font-weight: 400
+							}
+							.para {
+								font-size: 16px
+							}
+							.modal {
+								position: relative;
+							}
+						</style>
+	
+						<body style = "background-color: transparent;">'''
+
+				# loop on all product and generate HTML for each one and add into PRODUCT_CARD as string
+				for idx, (col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13) in enumerate(myrows):
 					# create HTML product card
-
 					if str(col4) == 'nan':
 						availability = "Not available"
 						availability_color = 'text-danger'
 						col4 = "N/A"
-
 					else:
 						availability = "Available"
 						availability_color = 'text-success'
@@ -231,64 +284,26 @@ def recommendation_engine_gui():
 						category_html = '''<div class="mt-1 mb-1 spec-1">'''
 						for i in col6_array:
 							category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
-
 						category_html += "<br></div>"
-
 					if str(col7) == 'nan':
-						col7 = ""
+						col7 = "No Information to display"
+					if str(col8) == 'nan':
+						col8 = "No Information to display"
+					if str(col9) == 'nan':
+						col9 = "No Information to display"
+					if str(col10) == 'nan':
+						col10 = "No Information to display"
+					if str(col11) == 'nan':
+						col11 = "No Information to display"
+					if str(col12) == 'nan':
+						col12 = "No Information to display"
+					if str(col13) == 'nan':
+						col13 = "No Information to display"
 
-					PRODUCT_CARD = '''
-						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-						<style>
-							.ratings i {{
-								font-size: 16px;
-								color: red
-							}}
-							.btn-outline-primary:hover {{
-								color: #ffffff;
-								background-color: rgb(131, 160, 52);
-							}}
-							.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {{
-								color: rgb(255, 255, 255);
-								background-color: #2e6f22;
-								border-color: rgb(0, 123, 255);
-							}}
-							.strike-text {{
-								color: red;
-								text-decoration: line-through
-							}}
-							.product-image {{
-								width: 50%
-							}}
-							.dot {{
-								height: 7px;
-								width: 7px;
-								margin-left: 6px;
-								margin-right: 6px;
-								margin-top: 3px;
-								background-color: green;
-								border-radius: 50%;
-								display: inline-block
-							}}
-							.spec-1 {{
-								color: #938787;
-								font-size: 15px
-							}}
-							h5 {{
-								font-weight: 400
-							}}
-							.para {{
-								font-size: 16px
-							}}
-						</style>
-
-						<body style = "background-color: transparent;">
+					PRODUCT_CARD += '''
 							<!-- The Modal -->
-							<div class="modal" id="myModal">
-								<div class="modal-dialog">
+							<div class="modal" id="card_{idx}">
+								<div class="modal-dialog modal-dialog-scrollable">
 								<div class="modal-content">
 								
 									<!-- Modal Header -->
@@ -299,7 +314,69 @@ def recommendation_engine_gui():
 									
 									<!-- Modal body -->
 									<div class="modal-body">
-									{product_detail}
+										<p>
+										<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_detail" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Product Detail</button>
+										</p>
+										<div class="collapse" id="product_detail">
+											<div class="card card-body">
+												{product_detail}
+											</div>
+											<br>
+										</div>
+										<p>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Ingredients" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Ingredients</button>
+										</p>
+										<div class="collapse" id="Ingredients">
+											<div class="card card-body">
+												{Ingredients}
+											</div>
+											<br>
+										</div>
+										<p>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#nutritional_information" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Nutritional Information</button>
+										</p>
+										<div class="collapse" id="nutritional_information">
+											<div class="card card-body">
+												{Nutritional_information}
+											</div>
+											<br>
+										</div>
+										<p>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#allergen_warnings" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Allergen Warning</button>
+										</p>
+										<div class="collapse" id="allergen_warnings">
+											<div class="card card-body">
+												{Allergen_warnings}
+											</div>
+											<br>
+										</div>
+										<p>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#claims" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Claims</button>
+										</p>
+										<div class="collapse" id="claims">
+											<div class="card card-body">
+												{Claims}
+											</div>
+											<br>
+										</div>
+										<p>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#endorsements" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Endorsements</button>
+										</p>
+										<div class="collapse" id="endorsements">
+											<div class="card card-body">
+												{Endorsements}
+											</div>
+											<br>
+										</div>
+										<p>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_origin" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Product Origin</button>
+										</p>
+										<div class="collapse" id="product_origin">
+											<div class="card card-body">
+												{product_origin}
+											</div>
+											<br>
+										</div>
 									</div>
 									
 									<!-- Modal footer -->
@@ -317,7 +394,7 @@ def recommendation_engine_gui():
 											<div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
 											<div class="col-md-6 mt-1">
 												<h5>{title}</h5>
-
+	
 												{category_html}
 												<p class="text-justify text-truncate para mb-0">{product_detail}<br><br></p>
 											</div>
@@ -328,7 +405,7 @@ def recommendation_engine_gui():
 												</div>
 												<h6 class="{availability_color}">{availability}</h6>
 												<div class="d-flex flex-column mt-4">
-													<button data-toggle="modal" data-target="#myModal" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
+													<button data-toggle="modal" data-target="#card_{idx}" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 													<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button>
 												</div>
 											</div>
@@ -336,10 +413,13 @@ def recommendation_engine_gui():
 									</div>
 								</div>
 							</div>    
-						</body>
-						'''.format(product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7)
+						'''.format(idx=idx, product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7, Ingredients=col8, Nutritional_information=col9, Allergen_warnings=col10, Claims=col11, Endorsements=col12, product_origin=col13)
 
-					stc.html(PRODUCT_CARD, height=600)
+					# complete html tag
+					PRODUCT_CARD += "</body>"
+
+				# to display whole HTML as a single element
+				stc.html(PRODUCT_CARD, height=8500)
 
 			except Exception as e:
 				print(e)
