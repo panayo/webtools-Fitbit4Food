@@ -461,7 +461,7 @@ def recommendation_engine_gui():
 							</div>
 							<script type = "text/javascript">
 							<!--
-								var product_data_{idx} = {{ URL:"{product_link}", Product_Title:"{title}",tag:"",Product_Price:"{price}",Product_Volume:"{volume}",price_per_base_volume:"",Category:"",Product_Detail:"{product_detail}",Ingredients:"{Ingredients}",Nutritional_information:"{Nutritional_information}",Allergen_warnings:"{Allergen_warnings}",Claims:"{Claims}",Endorsements:"{Endorsements}",Product_Image:"{img_link}",Product_origin:""}}
+								var product_data_{idx} = {{ URL:"{product_link}", Product_Title:"{title}",tag:"",Product_Price:"{price}",Product_Volume:"{volume}",price_per_base_volume:"",Category:"{category_list}",Product_Detail:"{product_detail}",Ingredients:"{Ingredients}",Nutritional_information:"{Nutritional_information}",Allergen_warnings:"{Allergen_warnings}",Claims:"{Claims}",Endorsements:"{Endorsements}",Product_Image:"{img_link}",Product_origin:""}}
 
 								$("#reward_{idx}").on("click", function(e){{
 									e.preventDefault();
@@ -496,14 +496,14 @@ def recommendation_engine_gui():
 							-->
 							</script>
 
-						'''.format(idx= idx, product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7, Ingredients=col8, Nutritional_information=col9, Allergen_warnings=col10, Claims=col11, Endorsements=col12, product_origin=col13)
+						'''.format(idx= idx, product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7, Ingredients=col8, Nutritional_information=col9, Allergen_warnings=col10, Claims=col11, Endorsements=col12, product_origin=col13, category_list = col6)
 
 
 				# complate html tag
 				PRODUCT_CARD += '</body>'
 
 				# to display whole HTML as a single element 
-				stc.html(PRODUCT_CARD, height=8500)
+				stc.html(PRODUCT_CARD, height=9000)
 
 			except Exception as e:
 				print(e)
