@@ -212,10 +212,12 @@ def recommendation_engine_gui():
 				
 				# html header
 				PRODUCT_CARD = '''
+						<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 						<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 						<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 						<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 						<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+						
 						<style>
 							.ratings i {
 								font-size: 16px;
@@ -266,9 +268,9 @@ def recommendation_engine_gui():
 								margin: 0 auto;
 								line-heigth: 50px;
 								border-radius: 50%;
-								color: rgba(0,150,136 ,1);
-								background-color:rgba(38,166,154 ,0.3);
-								border-color: rgba(0,150,136 ,1);
+								color: rgb(0 150 53);
+								background-color: rgb(166 38 38 / 0%);
+								border-color: rgb(1 150 0)
 								border-width: 1px;
 								font-size: 15px;
 							}
@@ -415,9 +417,6 @@ def recommendation_engine_gui():
 										</div>
 									</div>
 									
-
-
-									
 									<!-- Modal footer -->
 									<div class="modal-footer">
 									<button type="button" class="btn btn-danger" style = "background-color: #2e6f22; border-color: #2e6f22" data-dismiss="modal">Close</button>
@@ -425,29 +424,32 @@ def recommendation_engine_gui():
 								</div>
 								</div>
 							</div>
-						
+
 							<div class="container mt-2 mb-2">
 								<div class="d-flex justify-content-center row">
 									<div class="col-md-11">
+									
 										<div style = "background-color: #c8ffbe;" class="row p-2 border rounded">
-											<div class="justify-content-right">
-												<button class="dislike">
-														<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-												</button>
+											
+											<div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}">
 											</div>
-											<div class="col-md-3 mt-1" style = "text-align: center;"><img class="img-fluid img-responsive rounded product-image" src="{img_link}"></div>
 											<div class="col-md-6 mt-1">
 												<h5>{title}</h5>
 
 												{category_html}
 												<p class="text-justify text-truncate para mb-0">{product_detail}<br><br></p>
+												
 											</div>
 											<div class="align-items-center align-content-center col-md-3 border-left mt-1">
+											
 												<div class="d-flex flex-row align-items-center">
 													<h4 class="mr-1">$ {price}</h4>
 													<span style = "color: #d44d2f; border-color: #2e6f22;">{volume}</span>
 												</div>
 												<h6 class="{availability_color}">{availability}</h6>
+												<button class="dislike" id="feedback_{idx}">
+												<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+												</button>
 												<div class="d-flex flex-column mt-4">
 													<button id="reward_{idx}" data-toggle="modal" data-target="#card_{idx}" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 													<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button>
@@ -457,26 +459,44 @@ def recommendation_engine_gui():
 									</div>
 								</div>
 							</div>
+							<script type = "text/javascript">
+							<!--
+								var product_data_{idx} = {{ URL:"{product_link}", Product_Title:"{title}",tag:"",Product_Price:"{price}",Product_Volume:"{volume}",price_per_base_volume:"",Category:"",Product_Detail:"{product_detail}",Ingredients:"{Ingredients}",Nutritional_information:"{Nutritional_information}",Allergen_warnings:"{Allergen_warnings}",Claims:"{Claims}",Endorsements:"{Endorsements}",Product_Image:"{img_link}",Product_origin:""}}
+
+								$("#reward_{idx}").on("click", function(e){{
+									e.preventDefault();
+										$.ajax({{
+										url: 'http://localhost:8888/reward',
+										method: 'POST',
+										headers: {{
+											'Content-Type':'application/json'
+										}},
+										dataType: 'json',
+										data: JSON.stringify(product_data_{idx})
+										}});
+								}});
+								$("#feedback_{idx}").on("click", function(e){{
+									e.preventDefault();
+										$.ajax({{
+										url: 'http://localhost:8888/feedback',
+										method: 'POST',
+										headers: {{
+											'Content-Type':'application/json'
+										}},
+										dataType: 'json',
+										data: JSON.stringify(product_data_{idx}),
+										success: function(){{
+											alert('Thank you for your feedback of product');
+										}},
+										error: function(){{
+											alert('Thank you for your feedback of product [Error]');
+										}}
+										}});
+								}});
+							-->
+							</script>
 
 						'''.format(idx= idx, product_link=col1, title=col2, img_link=col3, price=col4, volume=col5, availability=availability, availability_color=availability_color, category_html=category_html, product_detail=col7, Ingredients=col8, Nutritional_information=col9, Allergen_warnings=col10, Claims=col11, Endorsements=col12, product_origin=col13)
-				
-						# <script>
-						# 		var product_data_{{idx}} = { URL:{{product_link}}, Product_Title:{{title}},tag:"",Product_Price:{{price}},Product_Volume:{{volume}},price_per_base_volume:"",Category:{{category_html}},Product_Detail:{{product_detail}},Ingredients:{{Ingredients}},Nutritional_information:{{Nutritional_information}},Allergen_warnings:{{Allergen_warnings}},Claims:{{Claims}},Endorsements:{{Endorsements}},Product_Image:{{img_link}},Product_origin:""}
-						# 		$("#reward_{{idx}}").on("click", function(e) {
-						# 			e.preventDefault();
-						# 			$.ajax({
-						# 			url: 'http://localhost:8888/feedback',
-						# 			method: 'POST',
-						# 			headers: {
-						# 				'Content-Type':'application/json'
-						# 			},
-						# 			dataType: 'json',
-						# 			data: JSON.stringify(product_data_{{idx}})
-						# 			});
-						# 		});
-						# 	</script>
-
-
 
 
 				# complate html tag
