@@ -466,7 +466,7 @@ def recommendation_engine_gui():
 								$("#reward_{idx}").on("click", function(e){{
 									e.preventDefault();
 										$.ajax({{
-										url: 'http://localhost:8888/reward',
+										url: '/reward',
 										method: 'POST',
 										headers: {{
 											'Content-Type':'application/json'
@@ -478,7 +478,7 @@ def recommendation_engine_gui():
 								$("#feedback_{idx}").on("click", function(e){{
 									e.preventDefault();
 										$.ajax({{
-										url: 'http://localhost:8888/feedback',
+										url: '/feedback',
 										method: 'POST',
 										headers: {{
 											'Content-Type':'application/json'
