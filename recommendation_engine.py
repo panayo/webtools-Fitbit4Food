@@ -14,12 +14,16 @@ from sklearn.metrics.pairwise import cosine_similarity
 from textblob import TextBlob
 import time
 import inflect
+import sqlite3
+import pandas as pd
 
 class Recommendation_Engine:
     def __init__(self, my_preference):
 
         # read data from csv
         self._read_csv("all_product_data.csv")
+
+        self.get_dynamic_data('dynamic_database.db')
 
         # select relevent features
         self.feature_selection()
@@ -34,6 +38,18 @@ class Recommendation_Engine:
 
         # Initialize inflect engine
         self.inflect_engine = inflect.engine()
+
+    def get_dynamic_data(self, dbname = 'dynamic_database.db'):
+        # Create your connection.
+        try:
+            conn_db = sqlite3.connect(dbname)
+            self.dynamic_data = pd.read_sql_query("SELECT * FROM product_data", conn_db)
+            print("dynamic_data LOADED")
+        except Exception as e:
+            self.dynamic_data = None
+            print("dynamic_data NOT LOADED")
+            print(e)
+            pass
 
     # get all data into dataframe  
     def _read_csv(self, FILE_NAME):
@@ -79,7 +95,7 @@ class Recommendation_Engine:
             # print(self.df['features'])
         except Exception as e:
             print(e)
-        
+
     # this function is use to check tokanization works properly 
     def tokanization(self):
         #print(self.df['Product Title'])
@@ -354,6 +370,22 @@ class Recommendation_Engine:
             KEYWORD = KEYWORD.lower()
             #print(KEYWORD)
             
+            # RL based TOP priority
+
+            self.dynamic_data_title = self.dynamic_data['Product Title'].values.tolist()
+
+            self.dynamic_data['distances'] = self.find_tfidf_and_cosine(self.dynamic_data_title, KEYWORD)
+
+            # filter distance using THRESHOLD and sort by RL weight
+            self.dynamic_list_1 = self.dynamic_data[self.dynamic_data['RL_weight'] >= 0].sort_values(by=['RL_weight'], ascending=False)
+
+            self.length_dynamic_list_1 = len(self.dynamic_list_1.index)
+
+            # get top weight products dataframe
+            print(self.length_dynamic_list_1)
+            print(self.dynamic_list_1)
+
+            # Standard listing without RL
             # Create list and append user input   
             self.data_list = self.df['Product Title'].values.tolist()
             
@@ -381,6 +413,9 @@ class Recommendation_Engine:
             # remove features and distances column from output data
             del self.recommendation_list['features']
             del self.recommendation_list['distances']
+
+            # merge RL data and standard data without RL
+            self.recommendation_list = self.dynamic_list_1.append(self.recommendation_list, ignore_index = True)
 
             #print(self.recommendation_list)
             #################################################################################
