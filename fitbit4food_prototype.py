@@ -279,47 +279,46 @@ def recommendation_engine_gui():
 	
 						<body style = "background-color: transparent;">'''
 	
-# loop on all product and generate HTML for each one and add into PRODUCT_CARD as string
-for idx, (col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13) in enumerate(myrows):
-			# create HTML product card
+				# loop on all product and generate HTML for each one and add into PRODUCT_CARD as string
+				for idx, (col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13) in enumerate(myrows):
+							# create HTML product card
 
-			if str(col4) == 'nan':
-						availability = "Not available"
-						availability_color = 'text-danger'
-						col4 = "N/A"
-			else:
-						availability = "Available"
-						availability_color = 'text-success'
+							if str(col4) == 'nan':
+										availability = "Not available"
+										availability_color = 'text-danger'
+										col4 = "N/A"
+							else:
+										availability = "Available"
+										availability_color = 'text-success'
 
-      # convert category string to list
-      if len(col6) > 4:
-						import ast
-						col6_array = ast.literal_eval(col6)
-						# print(col6_array)
-						# print(type(col6_array))
-						category_html = '''<div class="mt-1 mb-1 spec-1">'''
-						for i in col6_array:
-							category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
+							# convert category string to list
+							if len(col6) > 4:
+									import ast
+									col6_array = ast.literal_eval(col6)
+									# print(col6_array)
+									# print(type(col6_array))
+									category_html = '''<div class="mt-1 mb-1 spec-1">'''
+									for i in col6_array:
+										category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
+									category_html += "<br></div>"
 
-						category_html += "<br></div>"
-
-      if str(col7) == 'nan':
-            col7 = "No Information to display"
-      if str(col8) == 'nan':
-						col8 = "No Information to display"
-      if str(col9) == 'nan':
-						col9 = "No Information to display"
-      if str(col10) == 'nan':
-						col10 = "No Information to display"
-      if str(col11) == 'nan':
-						col11 = "No Information to display"
-      if str(col12) == 'nan':
-						col12 = "No Information to display"
-      if str(col13) == 'nan':
-						col13 = "No Information to display"
+							if str(col7) == 'nan':
+										col7 = "No Information to display"
+							if str(col8) == 'nan':
+										col8 = "No Information to display"
+							if str(col9) == 'nan':
+										col9 = "No Information to display"
+							if str(col10) == 'nan':
+										col10 = "No Information to display"
+							if str(col11) == 'nan':
+										col11 = "No Information to display"
+							if str(col12) == 'nan':
+										col12 = "No Information to display"
+							if str(col13) == 'nan':
+										col13 = "No Information to display"
 
 
-			PRODUCT_CARD += '''
+							PRODUCT_CARD += '''
 							<!-- The Modal -->
 							<div class="modal" id="card_{idx}">
 								<div class="modal-dialog modal-dialog-scrollable">
