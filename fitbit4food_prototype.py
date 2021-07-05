@@ -281,44 +281,44 @@ def recommendation_engine_gui():
 	
 				# loop on all product and generate HTML for each one and add into PRODUCT_CARD as string
 				for idx, (col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13) in enumerate(myrows):
-							# create HTML product card
+						# create HTML product card
 
-							if str(col4) == 'nan':
-										availability = "Not available"
-										availability_color = 'text-danger'
-										col4 = "N/A"
-							else:
-										availability = "Available"
-										availability_color = 'text-success'
+						if str(col4) == 'nan':
+									availability = "Not available"
+									availability_color = 'text-danger'
+									col4 = "N/A"
+						else:
+									availability = "Available"
+									availability_color = 'text-success'
 
-							# convert category string to list
-							if len(col6) > 4:
-									import ast
-									col6_array = ast.literal_eval(col6)
-									# print(col6_array)
-									# print(type(col6_array))
-									category_html = '''<div class="mt-1 mb-1 spec-1">'''
-									for i in col6_array:
-										category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
-									category_html += "<br></div>"
+						# convert category string to list
+						if len(col6) > 4:
+								import ast
+								col6_array = ast.literal_eval(col6)
+								# print(col6_array)
+								# print(type(col6_array))
+								category_html = '''<div class="mt-1 mb-1 spec-1">'''
+								for i in col6_array:
+									category_html += '''<span class="dot"></span> <span>{value}</span>'''.format(value=i)
+								category_html += "<br></div>"
 
-							if str(col7) == 'nan':
-										col7 = "No Information to display"
-							if str(col8) == 'nan':
-										col8 = "No Information to display"
-							if str(col9) == 'nan':
-										col9 = "No Information to display"
-							if str(col10) == 'nan':
-										col10 = "No Information to display"
-							if str(col11) == 'nan':
-										col11 = "No Information to display"
-							if str(col12) == 'nan':
-										col12 = "No Information to display"
-							if str(col13) == 'nan':
-										col13 = "No Information to display"
+						if str(col7) == 'nan':
+									col7 = "No Information to display"
+						if str(col8) == 'nan':
+									col8 = "No Information to display"
+						if str(col9) == 'nan':
+									col9 = "No Information to display"
+						if str(col10) == 'nan':
+									col10 = "No Information to display"
+						if str(col11) == 'nan':
+									col11 = "No Information to display"
+						if str(col12) == 'nan':
+									col12 = "No Information to display"
+						if str(col13) == 'nan':
+									col13 = "No Information to display"
 
 
-							PRODUCT_CARD += '''
+						PRODUCT_CARD += '''
 							<!-- The Modal -->
 							<div class="modal" id="card_{idx}">
 								<div class="modal-dialog modal-dialog-scrollable">
@@ -334,7 +334,7 @@ def recommendation_engine_gui():
 									<div class="modal-body">
 
 										<p>
-										<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_detail" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Product Detail</button>
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_detail" style = "background-color: #2e6f22; border-color: #2e6f22" aria-expanded="false" aria-controls="collapse">Product Detail</button>
 										</p>
 
 										<div class="collapse" id="product_detail">
@@ -445,7 +445,7 @@ def recommendation_engine_gui():
 												<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
 												</button>
 												<div class="d-flex flex-column mt-4">
-													<button data-toggle="modal" data-target="#card_{idx}" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
+													<button id="reward_{idx}" data-toggle="modal" data-target="#card_{idx}" style = "background-color: #2e6f22; border-color: #2e6f22" class="btn btn-primary btn-sm"> <a style = "color: rgb(255, 255, 255);"> Unlock More Info </a></button>
 													<button onClick="javascript:window.open('{product_link}', '_blank');" style = "color: #2e6f22; border-color: #2e6f22;" class="btn btn-outline-primary btn-sm mt-2" type="button"><a> Add to cart</a></button>
 												</div>
 											</div>
