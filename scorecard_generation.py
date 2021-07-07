@@ -16,6 +16,10 @@ from spellchecker import SpellChecker
 
 # change path if required / for mac os just comment this line
 # pytesseract.pytesseract.tesseract_cmd = r'/usr/local/Cellar/tesseract/4.1.1/bin/tesseract'
+
+# for windows
+# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 import streamlit as st
 import pandas as pd
 
@@ -157,8 +161,21 @@ class Scorecard_generator:
     @st.cache(suppress_st_warning=True, allow_output_mutation=True)  
     def expensive_computation_load_data(self):
         # reading csv file from url 
-        data = pd.read_csv("all_product_data.csv")
-        print("Data Loaded")
+        # data = pd.read_csv("all_product_data.csv")
+        # print("Data Loaded")
+        try:
+            conn_db = sqlite3.connect('dynamic_database.db')
+            data = pd.read_sql_query("SELECT * FROM product_data", conn_db)
+            # print(data)
+            print("dynamic_data LOADED")
+        except Exception as e:
+            data = None
+            print("dynamic_data NOT LOADED")
+            print(e)
+            pass
+
+
+
         return data
 
     def get_product_description_from_csv(self, data, product_name):
@@ -167,16 +184,19 @@ class Scorecard_generator:
             # substring to be searched
 
             # creating and passing series to new column
-            data_index = data["Product Title"].str.find(product_name)
+            data_index = data["ProductTitle"].str.find(product_name)
 
             print("product_name", product_name)
+            #blob_pname = TextBlob(product_name)
+            #product_name = str(blob_pname.correct())
+            #print("correct product_name", product_name)
 
             # Check product is present in our data base if not pass
             if data_index.max() != -1:
 
                 data_all = data.iloc[data_index.argmax()]
 
-                text_description = data_all[['Product Title', 'Product Detail', 'Ingredients', 'Nutritional_information', 'Allergen warnings', 'Claims', 'Endorsements']].to_string(header=False, index=False)
+                text_description = data_all[['ProductTitle', 'ProductDetail', 'Ingredients', 'Nutritional_information', 'Allergenwarnings', 'Claims', 'Endorsements']].to_string(header=False, index=False)
 
                 # remove other words then text
                 text_description = re.sub('[^a-zA-Z]', ' ', text_description)
@@ -187,6 +207,29 @@ class Scorecard_generator:
                 #convert multiple white space to single
                 text_description = re.sub(' +', ' ', text_description)
 
+                #print(text_description)
+                #print(type(text_description))
+
+                #------- R & D stuff ----------#
+                
+                #blob = TextBlob(text_description)
+                #text_description = str(blob.correct())
+                # prints the corrected spelling
+                #print("corrected text: "+str(blob.correct()))
+                #text_description = data.values.tolist()
+                #text_description = ' '.join(str(v) for v in text_description)
+                #discription_out['features'] = discription_out['Product Title'].astype(str) + ' ' + discription_out['Product Detail'].astype(str) + ' ' + discription_out['Ingredients'].astype(str) + ' ' + ' ' + discription_out['Nutritional_information'].astype(str) + ' ' + discription_out['Allergen warnings'].astype(str) + ' ' + discription_out['Claims'].astype(str) + ' ' + discription_out['Endorsements'].astype(str) 
+
+                #text_description = discription_out["Name"].str.cat(new, sep =", ")
+                #print(data['features'])
+                #text_description = data.apply(' '.join, axis=1)
+
+                #text_description = discription_out["Product Title", "Product Detail"].astype(str).apply(''.join, axis=1)
+                #print(product_name)
+                #print("WE ARE HERE")
+                #print("-----------------------------")
+                #text_description = discription_out['Product Title'] + ' ' + discription_out['Product Detail'] + ' ' + str(discription_out['Ingredients']) + ' ' + str(discription_out['Nutritional_information']) + ' ' + str(discription_out['Allergen warnings']) + ' ' + str(discription_out['Claims'])#.astype(str)
+
                 # add space to merge next product
                 text_description += " "
 
@@ -196,6 +239,8 @@ class Scorecard_generator:
         except Exception as e:
             print(e)
             text_description = ""
+            
+
 
         return text_description
 
@@ -286,7 +331,7 @@ class Scorecard_generator:
             score = self.find_distances_and_cosine(extracted_data, USER_PREFERENCE_TEXT)
             #print(score)
             # This function is used to increase your distance value with certain parameters 
-            # Because we never get 100 Percent match with only distance. This function will help to get 100 % matching
+            # Becasue we never get 100 Percent match with only distance. This function will help to get 100 % matching
             normalized_score += self.get_normalized_score(score)
             #print("score from 1st method", score)
         else :
